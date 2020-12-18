@@ -21,19 +21,42 @@ function getData(ticker){
     return data;
 }
 
-buildDropdown()
-function buildDropdown(){
-    var periodOptions = ['1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','ytd','max']
+buildPeriodDropdown().on("change", function(){
+    buildIntervalDropdown(this.value)
+})
+function buildPeriodDropdown(){
+    var periodOptions = ['ytd','1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','max']
     var form = d3.select("#stockInputForm")
-    var select = form.append('select').classed("period", true).attr("name", "period")
+    var select = form.append('select').classed("period", true).attr("name", "period").attr("value", "ytd")
     periodOptions.forEach(period => {
         select.append('option')
             .attr('value', `${period}`)
             .classed("drop-text", true)
             .text(`${period}`)
-    })
+    });
+    return select;
 
+};
+
+function buildIntervalDropdown(chosenPeriod) {
+    var validIntervals;
+    if (chosenPeriod === "1d" | chosenPeriod === "5d" | chosenPeriod==="1mo"){
+        validIntervals = ['1 min','2 min','5 min','15 min','30 min','60 min','90 min','1 hour','1 day'];
+    } else {
+        validIntervals=['1d','5d','1wk','1mo','3mo']
+    }
+    let form = d3.select("#stockInputForm")
+    form.append('label').attr("for", "interval").text("Interval: ").classed("period", true)
+    let select = form.append('select').classed("period", true).attr("name", "interval")
+    
+    validIntervals.forEach(interval =>{
+        select.append('option')
+            .attr('value', `${interval}`)
+            .classed("drop-text", true)
+            .text(`${interval}`)
+    })
 }
+
 
 
 function stockButtonOn(){
