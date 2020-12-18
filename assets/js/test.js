@@ -37,7 +37,7 @@ function stockButtonOn(){
     var chosenTicker = (this.stockInputForm.ticker.value.toUpperCase())
     var period = (this.stockInputForm.period.value)
     // console.log(period)
-    d3.csv(`http://localhost:5000/ticker=${chosenTicker}/period=${period}`, result => {
+    d3.csv(`./ticker=${chosenTicker}/period=${period}`, result => {
         cleanData(result)
         let labels = result.map(element => element.Date)
         // console.log(labels)

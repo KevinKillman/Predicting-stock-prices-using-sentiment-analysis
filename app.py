@@ -12,9 +12,9 @@ def queryAPIperiod(ticker, period='ytd', interval='1d'):
 
     return yf.Ticker(ticker).history(period=period, interval=interval).to_csv()
                    
-def queryAPIstartEnd(ticker, start='1986-03-13', end='2020-12-14'):
+def queryAPIstartEnd(ticker, s='1986-03-13', e='2020-12-14'):
 
-    return yf.Ticker(ticker).history(start=start, end=end).to_csv()
+    return yf.Ticker(ticker).history(start=s, end=e).to_csv()
 
 
 @app.route('/')
@@ -38,8 +38,8 @@ def periodIntervalRoute(ticker, period, interval):
     return queryAPIperiod(ticker, period=period, interval=interval)
     
 @app.route('/ticker=<string:ticker>/start=<string:start>/end=<string:end>')             
-def startEndRoute(ticker,start,end):
-    return queryAPIperiod(ticker, start=start, end=end)
+def startEndRoute(ticker,s,e):
+    return queryAPIstartEnd(ticker, s=s, e=e)
 
 @app.route('/info/ticker=<string:ticker>')
 def infoRoute(ticker):
