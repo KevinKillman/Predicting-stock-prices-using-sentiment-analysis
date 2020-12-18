@@ -1,20 +1,23 @@
-.svg-container { 
-	display: inline-block;
-	position: relative;
-	width: 100%;
-	padding-bottom: 100%; 
-	vertical-align: middle; 
-	overflow: hidden; 
+.chart-container{
+	padding-top: 2%
 }
 
-.svg-content { 
-	display: inline-block;
-	position: absolute;
-	top: 0;
-	left: 0;
+.info-background {
+	border: white;
+	background: lightblue
 }
 
-.line {
-	fill: white;
-	stroke: blue;
+.info-head {
+	color: white;
+	background: black;
+	margin-top: 2%;
+	border: solid;
+}
+
+.drop-text{
+	color: black;
+}
+
+#stockInputForm{
+	color: white;
 }

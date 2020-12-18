@@ -1,16 +1,19 @@
 from flask import Flask, jsonify                     #imports Flask CLASS and jsonify funct
 from flask_cors import CORS
-
+import yfinance as yf
 
 app = Flask(__name__)
 CORS(app)
 
+def infoQuery(ticker):
+    return yf.Ticker(ticker).info
+
 def queryAPIperiod(ticker, period='ytd', interval='1d'):
-    import yfinance as yf
+
     return yf.Ticker(ticker).history(period=period, interval=interval).to_csv()
                    
 def queryAPIstartEnd(ticker, start='1986-03-13', end='2020-12-14'):
-    import yfinance as yf
+
     return yf.Ticker(ticker).history(start=start, end=end).to_csv()
 
 @app.route('/ticker=<string:ticker>')             
@@ -19,7 +22,11 @@ def index(ticker):
 
 @app.route('/ticker=<string:ticker>/period=<string:period>')             
 def periodRoute(ticker, period):
-    return queryAPIperiod(ticker, period=period)
+    if period =="2y" or period =="5y" or period =="10y":
+        interval = '1wk'
+    else:
+        interval = '1d'
+    return queryAPIperiod(ticker, period=period, interval=interval)
 
 @app.route('/ticker=<string:ticker>/period=<string:period>/interval=<string:interval>')             
 def periodIntervalRoute(ticker, period, interval):
@@ -28,6 +35,10 @@ def periodIntervalRoute(ticker, period, interval):
 @app.route('/ticker=<string:ticker>/start=<string:start>/end=<string:end>')             
 def startEndRoute(ticker,start,end):
     return queryAPIperiod(ticker, start=start, end=end)
+
+@app.route('/info/ticker=<string:ticker>')
+def infoRoute(ticker):
+    return infoQuery(ticker)
         
         
         

@@ -82,7 +82,7 @@ var svgHeight = window.innerHeight;
 var margin = {
     top: 100,
     bottom: 100,
-    right: 100,
+    right: 150,
     left: 100
 };
 
@@ -101,16 +101,18 @@ function MakeResponsive() {
         svgArea.remove();
     };
 
-    svgWidth = (window.innerWidth);
-    svgHeight = (window.innerHeight);
+    svgWidth = (window.innerWidth)*.75;
+    svgHeight = (window.innerHeight)*.75;
 
     height = svgHeight - margin.top - margin.bottom;
     width = svgWidth - margin.left - margin.right;
 
     var svg = d3.select(".svg-container")
         .append("svg")
-        .attr("height", svgHeight)
-        .attr("width", svgWidth);
+        .classed("svg-content", true)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        // .attr("height", svgHeight)
+        // .attr("width", svgWidth);
 
     var chartGroup = svg.append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`)
@@ -118,6 +120,7 @@ function MakeResponsive() {
     var parseTime = d3.timeParse("%Y-%m-%d")
     // Read data and use .then on promise object
     d3.csv("http://localhost:5000/ticker=AAPL", result => {
+
         result.forEach(element => {
             element.Open = +element.Open;
             element.Close = +element.Close ;
@@ -269,3 +272,31 @@ function MakeResponsive() {
 MakeResponsive()
 
 d3.select(window).on("resize", MakeResponsive)
+
+
+
+
+
+
+
+
+
+
+
+
+
+function buildChartJS(dataset) {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var yOpenPrice = dataset.map(element => element.Open)
+    var xTime = dataset.map(element => element.Date)
+    var data = {
+        label: 'Open Price',
+        x: xTime,
+        y: yOpenPrice
+    }
+    var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: options
+    });
+};
