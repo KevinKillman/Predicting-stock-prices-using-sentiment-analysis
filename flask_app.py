@@ -1,4 +1,4 @@
-from flask import Flask, jsonify                     #imports Flask CLASS and jsonify funct
+from flask import Flask, jsonify, render_template                     #imports Flask CLASS and jsonify funct
 from flask_cors import CORS
 import yfinance as yf
 
@@ -15,6 +15,11 @@ def queryAPIperiod(ticker, period='ytd', interval='1d'):
 def queryAPIstartEnd(ticker, start='1986-03-13', end='2020-12-14'):
 
     return yf.Ticker(ticker).history(start=start, end=end).to_csv()
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/ticker=<string:ticker>')             
 def index(ticker):
