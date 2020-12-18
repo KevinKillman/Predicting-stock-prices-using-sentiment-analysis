@@ -9,8 +9,9 @@ def infoQuery(ticker):
     return yf.Ticker(ticker).info
 
 def queryAPIperiod(ticker, period='ytd', interval='1d'):
-
-    return yf.Ticker(ticker).history(period=period, interval=interval).to_csv()
+    stock_df = yf.Ticker(ticker).history(period=period, interval=interval)
+    stock_df.dropna(inplace=True)
+    return stock_df.to_csv()
                    
 def queryAPIstartEnd(ticker, s='1986-03-13', e='2020-12-14'):
 
