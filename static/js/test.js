@@ -2,6 +2,9 @@
 var ticker = 'AAPL'
 var chart;
 
+var x = moment([])
+
+
 d3.csv(`./ticker=${ticker}`, result => {
     cleanData(result)
     var ctx = document.getElementById('myChart').getContext('2d');
@@ -36,11 +39,9 @@ function buildDropdown(){
 function stockButtonOn(){
     var chosenTicker = (this.stockInputForm.ticker.value.toUpperCase())
     var period = (this.stockInputForm.period.value)
-    // console.log(period)
     d3.csv(`./ticker=${chosenTicker}/period=${period}`, result => {
         cleanData(result)
         let labels = result.map(element => element.Date)
-        // console.log(labels)
         let data = result.map(element=> element.Open)
         updateChart(chart, labels, data, chosenTicker)
     })
@@ -51,10 +52,6 @@ function stockButtonOn(){
 function init_chart(ticker, dataset, yVariable, ctx) {
     var yAxisData = dataset.map(element => element[yVariable])
     var xTime = dataset.map(element => element.Date)
-    // console.log(xTime)
-    // console.log(yAxisData)
-    
-    // console.log(dataset)
     var myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -72,6 +69,13 @@ function init_chart(ticker, dataset, yVariable, ctx) {
             }]
         },
         options: {
+            
+            scales:{
+                xAxes:[{
+                    type: 'time',
+                    
+                }]
+            },
             tooltips: {
                 mode: 'nearest'
             }
@@ -83,29 +87,24 @@ function init_chart(ticker, dataset, yVariable, ctx) {
 function cleanData(result) {
     let formatTime = d3.timeFormat("%B %d, %Y");
     let parseTime = d3.timeParse("%Y-%m-%d")
-    // console.log(result)
     result.forEach(element => {
         element.Open = +element.Open;
         element.Close = +element.Close ;
         element.High = +element.High ;
         element.Low = +element.Low ;
-        element.Date = formatTime(parseTime(element.Date));
+        element.Date = (parseTime(element.Date));
         element.Volume = +element.Volume;
     });
-    // console.log(result)
 };
 
 function updateChart(chart, newLabel, newData, ticker) {
-    // console.log(chart.data.labels)
     let count =chart.data.labels.length;
     for(let i=0; i<count; i++){
         chart.data.labels.pop()
     }
     // chart.data.labels.forEach(label => chart.data.labels.pop());
-    // console.log("after pop", chart.data.labels)
 
     chart.data.datasets.forEach((dataset) => {
-        console.log(dataset)
         dataset.data.pop();
     });
     chart.update();
@@ -117,9 +116,5 @@ function updateChart(chart, newLabel, newData, ticker) {
 
     chart.update();
 
-    newLabel.forEach(label => console.log(typeof(label)))
-    // console.log('succes')
-    // console.log(newLabel)
-    // console.log(newData)
     return chart;
 };

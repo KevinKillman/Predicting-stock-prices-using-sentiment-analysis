@@ -18,6 +18,13 @@
 	color: black;
 }
 
+.submit {
+
+	padding: auto;
+	margin-left: 100px;
+}
+
 #stockInputForm{
 	color: white;
+	margin-left: 10px;
 }
