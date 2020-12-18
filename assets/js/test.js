@@ -2,7 +2,7 @@
 var ticker = 'AAPL'
 var chart;
 
-d3.csv(`http://localhost:5000/ticker=${ticker}`, result => {
+d3.csv(`./ticker=${ticker}`, result => {
     cleanData(result)
     var ctx = document.getElementById('myChart').getContext('2d');
     chart = init_chart(ticker, result, 'Open', ctx);
@@ -10,7 +10,7 @@ d3.csv(`http://localhost:5000/ticker=${ticker}`, result => {
 
 function getData(ticker){
     var data;
-    d3.csv(`http://localhost:5000/ticker=${ticker}`, result => {
+    d3.csv(`./ticker=${ticker}`, result => {
         cleanData(result)
         data = result;
         return data
