@@ -22,7 +22,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/ticker=<string:ticker>')             
-def index(ticker):
+def tickerRoute(ticker):
     return queryAPIperiod(ticker)
 
 @app.route('/ticker=<string:ticker>/period=<string:period>')             
