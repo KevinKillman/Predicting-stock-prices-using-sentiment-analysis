@@ -1,14 +1,15 @@
-//init function call
-var ticker = 'AAPL'
-var chart;
-var defaultInterval;
+//init declarations
+var chosenTicker = 'AAPL'
+var globalChart;
+var globalInterval;
+var globalPeriod;
 
 
 
-d3.json(`./ticker=${ticker}`, result => {
+d3.json(`./ticker=${chosenTicker}`, result => {
     cleanData(result)
     var ctx = document.getElementById('myChart').getContext('2d');
-    chart = init_chart(ticker, result, ctx);
+    globalChart = init_chart(chosenTicker, result, ctx);
 });
 
 buildIntervalRadio()
@@ -34,11 +35,11 @@ function buildIntervalRadio(chosenPeriod='1mo') {
     if (chosenPeriod === "1d" | chosenPeriod === "5d"){
         validIntervals = ['1 min','2 min','5 min','15 min','30 min','60 min','90 min','1 hour','1 day'];
         intervalValues = ['1m','2m','5m','15m','30m','60m','90m','1h','1d']
-        defaultInterval='1m'
+        globalInterval='1m'
     } else {
         validIntervals=['1d','5d','1wk','1mo','3mo']
         intervalValues=['1d','5d','1wk','1mo','3mo']
-        defaultInterval='1d'
+        globalInterval='1d'
     }
 
 
@@ -49,36 +50,39 @@ function buildIntervalRadio(chosenPeriod='1mo') {
         radioForm.remove()
     }
     radioForm = radioContainer.append('form')
-    validIntervals.forEach((interval, index) =>{
+    intervalValues.forEach((interval, index) =>{
         let label;
-        if (intervalValues[index]===defaultInterval){
+        if (interval===globalInterval){
             label = radioForm.append('label')
                 .classed("radio-inline", true)
                 // .classed('justify-content-center', true)
-                .attr('for', `${intervalValues[index]}`)
-                .html(`<input value="${intervalValues[index]}" type="radio" name="optradio" checked> ${intervalValues[index]} `)
+                .attr('for', `${interval}`)
+                .html(`<input value="${interval}" class="intervalRadio" type="radio" name="optradio" checked> ${interval} `)
         }else{
-            let label = radioForm.append('label')
+            label = radioForm.append('label')
                 .classed("radio-inline", true)
                 // .classed('justify-content-center', true)
-                .attr('for', `${intervalValues[index]}`)
-                .html(`<input value="${intervalValues[index]}" type="radio" name="optradio"> ${intervalValues[index]} `)
-            }        
+                .attr('for', `${interval}`)
+                .html(`<input value="${interval}" class="intervalRadio" type="radio" name="optradio"> ${interval} `)
+        }
+
     })
+    let eventHandler=d3.selectAll('.intervalRadio').on('click', handleRadio)
+
 }
 
 
 
 function stockButtonOn(){
-    var chosenTicker = (this.stockInputForm.ticker.value.toUpperCase())
-    var period = (this.stockInputForm.period.value)
-    buildIntervalRadio(period)
-    d3.json(`./ticker=${chosenTicker}/period=${period}/interval=${defaultInterval}`, result => {
+    chosenTicker = (this.stockInputForm.ticker.value.toUpperCase())
+    globalPeriod = (this.stockInputForm.period.value)
+    buildIntervalRadio(globalPeriod)
+    d3.json(`./ticker=${chosenTicker}/period=${globalPeriod}/interval=${globalInterval}`, result => {
         cleanData(result)
 
 
-        let options = chartOptions(defaultInterval)
-        updateChart(chart, result, chosenTicker, options)
+        let options = chartOptions(globalInterval)
+        newTickerChartUpdate(globalChart, result, chosenTicker, options)
     })
 }
 
@@ -88,10 +92,9 @@ function init_chart(ticker, dataset, ctx) {
     var yOpen = dataset.map(element => element.Open)
     var yClose = dataset.map(element => element.Close)
     var xTime = dataset.map(element => element.Date)
-    let options = chartOptions('1d')
     var myLineChart = new Chart(ctx, {
         type: 'line',
-        data: {
+        data: { 
             labels: xTime,
             datasets: [{
                 label: `${ticker} Open Price`,
@@ -114,7 +117,7 @@ function init_chart(ticker, dataset, ctx) {
             lineTension:0
         }]
         },
-        options: options
+        options: chartOptions('1d')
     });
     return myLineChart;
 };
@@ -136,7 +139,7 @@ function cleanData(result) {
     });
 };
 
-function updateChart(chart,  newData, ticker, options) {
+function newTickerChartUpdate(chart,  newData, ticker, options) {
     let newLabel;
     if (newData[0].Date){
         newLabel = newData.map(element => element.Date)
@@ -314,4 +317,29 @@ function buildIntervalDropdown(chosenPeriod) {
             .text(`${interval}`)
 
     })
+};
+
+function handleRadio(){
+    if (!(globalInterval===this.value)) {
+        globalInterval = this.value
+        changeInterval()
+    }
+}
+
+function changeInterval(chart=globalChart, interval=globalInterval, period=globalPeriod){
+    d3.json(`./ticker=${chosenTicker}/period=${period}/interval=${interval}`, result=>{
+        newTickerChartUpdate(chart, result, chosenTicker, chartOptions(interval))
+    })
+    
+    chart.data.datasets.forEach(dataset=>{
+        let small = ['1m','2m','5m', '1d']
+        if (small.includes(globalInterval)){
+            dataset.pointRadius = .1
+            dataset.pointHoverRadius = 0.1
+        }else{
+            dataset.pointRadius= .3
+        }
+        console.log(dataset)
+    })
+    chart.update()
 }
