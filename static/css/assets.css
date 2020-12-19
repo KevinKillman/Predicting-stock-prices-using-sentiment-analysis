@@ -18,6 +18,10 @@
 	color: black;
 }
 
+.radio-inline{
+	margin-right: 5px;
+}
+
 .submit {
 
 	padding: auto;
