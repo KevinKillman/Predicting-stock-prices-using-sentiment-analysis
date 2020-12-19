@@ -11,12 +11,12 @@ def infoQuery(ticker):
 def queryAPIperiod(ticker, period='ytd', interval='1d'):
     stock_df = yf.Ticker(ticker).history(period=period, interval=interval)
     stock_df.dropna(inplace=True)
-    return stock_df.to_csv()
+    stock_df.reset_index(inplace=True)
+    return stock_df.to_json(orient='records', date_format='iso')
                    
 def queryAPIstartEnd(ticker, s='1986-03-13', e='2020-12-14'):
 
-    return yf.Ticker(ticker).history(start=s, end=e).to_csv()
-
+    return yf.Ticker(ticker).history(start=s, end=e).reset_index(inplace=True).to_json(orient='records', date_format='iso')
 
 @app.route('/')
 def index():
