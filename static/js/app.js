@@ -1,22 +1,26 @@
 //init global declarations; used sporadically throughout functions
+
+
 // user defined in stockButtonOn(), init_chart(), and handleRadio()
 var chosenTicker = 'AAPL'
 var globalChart; //Chart object; globalChart.data.datasets etc..
 var globalInterval='1d'; //Interval that data can be viewed at. 1min incremented to 1mo (month). Limited by chosen period.
 var globalPeriod='ytd'; //Data reporting period. Starting from today moving back, 1d (day) incremented to 10y (years)
                   //includes values: 'ytd' and 'max'
-
+var allowedIntervalValues=['1d','5d','1wk','1mo','3mo']; //Accepted intervals for period
 
 //API request
 d3.json(`./ticker=${chosenTicker}`, result => {
     cleanData(result) //Data formatting
     var ctx = document.getElementById('myChart').getContext('2d'); //div class="myChart"
     globalChart = init_chart(chosenTicker, result, ctx);
-    console.log(globalChart)
+    // console.log(globalChart)
 });
 //Functions to build rest of page
 buildIntervalRadio()
 buildPeriodDropdown()
+buildInfo()
+
 
 //Chart init. Passed ticker string, result object from d3.json, and chart area (ctx from Charts.js)
 function init_chart(ticker=chosenTicker, dataset, ctx) {
@@ -78,12 +82,7 @@ function buildPeriodDropdown(){
 };
 //Similar function as above, but builds radio buttons below chart
 function buildIntervalRadio(chosenPeriod=globalPeriod) {
-    var intervalValues;
-    if (chosenPeriod === "1d" | chosenPeriod === "5d"){
-        intervalValues = ['1m','2m','5m','15m','30m','60m','90m','1h','1d']
-    } else {
-        intervalValues=['1d','5d','1wk','1mo','3mo']
-    }
+    checkIntervalLogic()
     var radioContainer = d3.select(".radioIntervalChar")
     //Removes buttons if they already exist
     var radioForm = radioContainer.select('form')
@@ -91,7 +90,7 @@ function buildIntervalRadio(chosenPeriod=globalPeriod) {
         radioForm.remove()
     }
     radioForm = radioContainer.append('form')
-    intervalValues.forEach((interval, index) =>{
+    allowedIntervalValues.forEach((interval, index) =>{
         let label;
         if (interval===globalInterval){
             label = radioForm.append('label')
@@ -123,9 +122,11 @@ function buildIntervalRadio(chosenPeriod=globalPeriod) {
 
 
 function stockButtonOn(){
-    chosenTicker = (this.stockInputForm.ticker.value.toUpperCase())
-    globalPeriod = (this.stockInputForm.period.value)
+    chosenTicker = (d3.select('#tickerInput').node().value.toUpperCase())
+    globalPeriod = (d3.select('.period').node().value)
+    console.log(chosenTicker)
     buildIntervalRadio(globalPeriod)
+    
     d3.json(`./ticker=${chosenTicker}/period=${globalPeriod}/interval=${globalInterval}`, result => {
         cleanData(result)
 
@@ -223,7 +224,8 @@ function chartOptions(interval=globalInterval){
     var checkIntervalIntraday = ['1m','2m','5m','15m','30m','60m','90m','1h']
     var checkIntervalMonth = ['1d','5d','1wk','1mo','3mo']
     let options;
-    if (checkIntervalIntraday.includes(interval)){
+    console.log(globalPeriod)
+    if (checkIntervalIntraday.includes(interval) & globalPeriod==='1d'){
         options = {
             responsive: true,
             scales:{
@@ -232,11 +234,25 @@ function chartOptions(interval=globalInterval){
                     distribution: 'series',
                     time: {
                         displayFormats:{
-                            millisecond: 'h:mm a'
+                            millisecond: 'D h a',
+                            second: 'D h a',
+                            minute: 'h:mm a',
+                            hour: 'hA'
+                            }
+                        },
+                    scaleLabel: {
+                        display: true,
+                        labelString: `${moment().format('MMMM Do, YYYY')}`
+                    }
+                    }],
+                yAxes:[{
+                    ticks:{
+                        callback: function(value,index,values){
+                            return '$' +value;
                         }
                     }
                 }]
-            },
+                },
             tooltips: {
                 mode: 'index',
                 callbacks: {
@@ -294,10 +310,24 @@ function chartOptions(interval=globalInterval){
                     distribution: 'series',
                     time: {
                         displayFormats:{
-                            millisecond: 'MMM D h a'
+                            millisecond: 'D h a',
+                            second: 'D h a',
+                            minte: 'h:mm a',
+                            hour: 'hA'
                             }
+                        },
+                    scaleLabel: {
+                        display: true,
+                        labelString: `${moment().format('YYYY')}`
+                    }
+                    }],
+                yAxes:[{
+                    ticks:{
+                        callback: function(value,index,values){
+                            return '$' +value;
                         }
-                    }]
+                    }
+                }]
                 },
             tooltips: {
                 mode: 'index',
@@ -338,40 +368,77 @@ function chartOptions(interval=globalInterval){
             }
         
         }
+    } else if (globalPeriod==='5d'){
+        options ={
+            scales:{
+                xAxes:[{
+                    type: 'time',
+                    distribution: 'series',
+                    time: {
+                        displayFormats:{
+                            minute: 'h:mm',
+                            hour: 'MMM D'
+                        }
+                    },
+                scaleLabel: {
+                    display: true,
+                    labelString: `${moment().subtract(5,'days').format('MMM Do')} - ${moment().format('MMM Do, YYYY')}`
+                }
+                }],
+            yAxes:[{
+                ticks:{
+                    callback: function(value,index,values){
+                        return '$' +value;
+                    }
+                }
+            }]
+            },
+            tooltips: {
+                mode: 'index',
+                callbacks: {
+                    title: function([tooltipItem], data) {
+                        let label = data.datasets[tooltipItem.datasetIndex].label;
+                        let title = label.split(' ')[0]
+                        title += ` ${moment(new Date(tooltipItem.label)).format('MMM D h a')}`
+                        return title;
+                    },
+                    label: function(tooltipItem, data) {
+                        let label = data.datasets[tooltipItem.datasetIndex].label;
+    
+                        if (label) {
+                            label = (label.split(' ')[1])
+                            label += ': ';
+                        }
+                        label += `$${Math.round(tooltipItem.yLabel * 100) / 100}`;
+                        return label;
+                    },
+                    
+                }
+            },
+            plugins:{
+                // zoom:{
+                //     pan:{
+                //         enabled: true,
+                //         mode:'y'
+                //     },
+                //     zoom:{
+                //         enabled:true,
+                //         drag:true,
+                //         mode:'xy',
+                //         speed: 1,
+                //         threshold: 5
+                //     }
+                // }
+            }
+        
+        }
     }
     // console.log(options)
+    // console.log(globalChart.options.scales.xAxes)
     return options;
 }
 
 
-function buildIntervalDropdown(chosenPeriod) {
-    var validIntervals;
-    var intervalValues;
-    var selectArea = d3.select(".interval");
-    var intervalLabel = d3.select(".intervalLabel")
-    if (!(selectArea.empty())){
-        selectArea.remove()
-        intervalLabel.remove()
-    }
-    if (chosenPeriod === "1d" | chosenPeriod === "5d"){
-        validIntervals = ['1 min','2 min','5 min','15 min','30 min','60 min','90 min','1 hour','1 day'];
-        intervalValues = ['1m','2m','5m','15m','30m','60m','90m','1h','1d']
-    } else {
-        validIntervals=['1d','5d','1wk','1mo','3mo']
-        intervalValues=['1d','5d','1wk','1mo','3mo']
-    }
-    let form = d3.select("#stockInputForm")
-    form.append('label').attr("for", "interval").text("Interval: ").classed("intervalLabel", true)
-    let select = form.append('select').classed("interval", true).attr("name", "interval")
-    
-    validIntervals.forEach((interval, index) =>{
-        select.append('option')
-            .attr('value', `${intervalValues[index]}`)
-            .classed("drop-text", true)
-            .text(`${interval}`)
-
-    })
-};
 
 function handleRadio(){
     if (!(globalInterval===this.value)) {
@@ -388,13 +455,41 @@ function changeInterval(chart=globalChart, interval=globalInterval, period=globa
     chart.data.datasets.forEach(dataset=>{
         let small = ['1m','2m','5m', '1d']
         if (small.includes(globalInterval)){
-            dataset.pointRadius = .1
+            dataset.pointRadius = .5
             dataset.pointHoverRadius = 0.1
         }else{
-            dataset.pointRadius= .3
+            dataset.pointRadius= .75
         }
-        console.log(dataset)
+        // console.log(dataset)
     })
     chart.update()
     return chart;
 }
+
+function checkIntervalLogic(){
+    if (globalPeriod === "1d" | globalPeriod === "5d"){
+        allowedIntervalValues = ['1m','2m','5m','15m','30m','60m','90m','1h']
+        
+    } else {
+        allowedIntervalValues=['1d','5d','1wk','1mo','3mo']
+    }
+    if (!(allowedIntervalValues.includes(globalInterval))){
+        globalInterval=allowedIntervalValues[0]
+    }
+}
+
+function buildInfo(){
+    var infoBody = d3.select(".info-body")
+    var infoHead = d3.select(".info-head")
+    d3.json(`./info/ticker=${chosenTicker}`, function(response){
+        console.log(response)
+        infoHead.html(`<img src="${response.logo_url}" alt="oops" class="img-thumbnail imgKEVIN" >`)
+        infoHead.append('h4').text(`${response.shortName}`)
+        var infoArray = ['sector', 'dayHigh','dayLow','fiftyDayAverage', 'fiftyTwoWeekHigh', 'fiftyTwoWeekLow']
+        var infoList = infoBody.append("ul")
+        infoArray.forEach(info =>{
+            infoList.append("li").text(`${info}: ${response[info]}`)
+        })
+    })
+}
+

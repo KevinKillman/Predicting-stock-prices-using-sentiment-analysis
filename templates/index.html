@@ -9,14 +9,14 @@
 
 
 </head>
-<body>
+<body >
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <form id="stockInputForm">
+        <div id="stockInputForm">
             <label for="ticker">Stock Ticker Index</label>
-            <input name="ticker" type="text" default="Ticker" value="AAPL">
+            <input name="ticker" id="tickerInput" type="text" default="Ticker" value="AAPL">
             <label for="period">Period: </label>
             
-        </form>
+        </div>
 
         <button class="btn btnKK" onclick="stockButtonOn()">
             Build
@@ -36,8 +36,7 @@
                 </div>
             </div>
             <div class="col-md-3 info-background">
-                <div class="container info-head">
-                    <h3>Stock Information</h3>
+                <div class="info-head">
                 </div>
                 <div class="container info-body">
                     

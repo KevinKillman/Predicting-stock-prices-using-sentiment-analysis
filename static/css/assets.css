@@ -3,15 +3,27 @@
 }
 
 .info-background {
-	border: white;
-	background: lightblue
+	border: black;
+	background: lightgrey
+}
+
+
+
+.imgKEVIN {
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+	height: 50%;
+	width: 50%;
 }
 
 .info-head {
-	color: white;
-	background: black;
-	margin-top: 2%;
-	border: solid;
+	margin-left:auto;
+	margin-right:auto;
+	background:none;
+	margin-top: 5%;
+	border: none;
+	text-align: center;
 }
 
 .drop-text{
