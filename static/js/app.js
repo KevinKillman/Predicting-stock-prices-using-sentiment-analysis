@@ -122,8 +122,16 @@ function buildIntervalRadio(chosenPeriod=globalPeriod) {
 
 
 function stockButtonOn(){
-    chosenTicker = (d3.select('#tickerInput').node().value.toUpperCase())
+    if ((chosenTicker === (d3.select('#tickerInput').node().value.toUpperCase()) & (globalPeriod === (d3.select('.period').node().value)))){
+        return;
+    }
+    if (!(chosenTicker ===d3.select('#tickerInput').node().value.toUpperCase())){
+        chosenTicker =d3.select('#tickerInput').node().value.toUpperCase()
+        buildInfo()
+    }
     globalPeriod = (d3.select('.period').node().value)
+    
+
     console.log(chosenTicker)
     buildIntervalRadio(globalPeriod)
     
@@ -481,12 +489,24 @@ function checkIntervalLogic(){
 function buildInfo(){
     var infoBody = d3.select(".info-body")
     var infoHead = d3.select(".info-head")
+    let infoListing = d3.select(".info-listing")
+    let check = d3.select(".imgKEVIN")
+    let titleLogo = d3.select(".titleLogo")
+    if(!(titleLogo.empty())){
+        titleLogo.remove()
+    }
+    if (!(infoListing.empty())){
+        infoListing.remove()
+    }
+    if (!(check.empty())){
+        check.remove()
+    }
     d3.json(`./info/ticker=${chosenTicker}`, function(response){
         console.log(response)
         infoHead.html(`<img src="${response.logo_url}" alt="oops" class="img-thumbnail imgKEVIN" >`)
-        infoHead.append('h4').text(`${response.shortName}`)
+        infoHead.append('h4').text(`${response.shortName}`).classed("titleLogo", true)
         var infoArray = ['sector', 'dayHigh','dayLow','fiftyDayAverage', 'fiftyTwoWeekHigh', 'fiftyTwoWeekLow']
-        var infoList = infoBody.append("ul")
+        var infoList = infoBody.append("ul").classed('info-listing', true)
         infoArray.forEach(info =>{
             infoList.append("li").text(`${info}: ${response[info]}`)
         })
