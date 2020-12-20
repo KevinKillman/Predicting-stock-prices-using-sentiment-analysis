@@ -11,7 +11,8 @@ var globalPeriod='ytd'; //Data reporting period. Starting from today moving back
 d3.json(`./ticker=${chosenTicker}`, result => {
     cleanData(result) //Data formatting
     var ctx = document.getElementById('myChart').getContext('2d'); //div class="myChart"
-    globalChart = init_chart(chosenTicker, result, ctx); 
+    globalChart = init_chart(chosenTicker, result, ctx);
+    console.log(globalChart)
 });
 //Functions to build rest of page
 buildIntervalRadio()
@@ -52,15 +53,7 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
         }]
         },
         options: chartOptions(), //Options logic
-        plugins:{
-            zoom:{
-                zoom:{
-                    enabled:true,
-                    drag:true,
-                    mode:'xy'
-                }
-            }
-        }
+        
     });
     return myLineChart; //returns chart object to global variable 
 };
@@ -115,6 +108,12 @@ function buildIntervalRadio(chosenPeriod=globalPeriod) {
         }
 
     })
+    let button = radioContainer.select('button')
+    if (!(button.empty())){
+        button.remove()
+    }
+
+    
 
     //EVENT HANDLER 
     let eventHandler=d3.selectAll('.intervalRadio').on('click', handleRadio)
@@ -188,9 +187,6 @@ function newTickerChartUpdate(chart,  newData, ticker, options) {
     chart.options=options
     chart.update();
 
-
-
-
     return chart;
 };
 
@@ -229,6 +225,7 @@ function chartOptions(interval=globalInterval){
     let options;
     if (checkIntervalIntraday.includes(interval)){
         options = {
+            responsive: true,
             scales:{
                 xAxes:[{
                     type: 'time',
@@ -264,13 +261,29 @@ function chartOptions(interval=globalInterval){
                 }
             },
             plugins:{
-                zoom:{
-                    zoom:{
-                        enabled:true,
-                        drag:true,
-                        mode:'xy'
-                    }
-                }
+                // zoom:{
+                //     pan:{
+                //         enabled: true,
+                //         mode:'y'
+                //     },
+                //     zoom:{
+                //         enabled:true,
+                //         drag:true,
+                //         mode:'xy',
+                //         rangeMin: {
+                //             // Format of min zoom range depends on scale type
+                //             x: null,
+                //             y: null
+                //         },
+                //         rangeMax: {
+                //             // Format of max zoom range depends on scale type
+                //             x: null,
+                //             y: null
+                //         },
+                //         speed: 1,
+                //         threshold: 5
+                //     }
+                // }
             }
         }
     } else if (checkIntervalMonth.includes(interval)){
@@ -309,15 +322,19 @@ function chartOptions(interval=globalInterval){
                 }
             },
             plugins:{
-                zoom:{
-                    zoom:{
-                        enabled:true,
-                        drag:true,
-                        mode:'xy',
-                        speed: 1,
-                        threshold: 5
-                    }
-                }
+                // zoom:{
+                //     pan:{
+                //         enabled: true,
+                //         mode:'y'
+                //     },
+                //     zoom:{
+                //         enabled:true,
+                //         drag:true,
+                //         mode:'xy',
+                //         speed: 1,
+                //         threshold: 5
+                //     }
+                // }
             }
         
         }
@@ -359,13 +376,13 @@ function buildIntervalDropdown(chosenPeriod) {
 function handleRadio(){
     if (!(globalInterval===this.value)) {
         globalInterval = this.value
-        changeInterval()
+        globalChart = changeInterval()
     }
 }
 
 function changeInterval(chart=globalChart, interval=globalInterval, period=globalPeriod){
     d3.json(`./ticker=${chosenTicker}/period=${period}/interval=${interval}`, result=>{
-        newTickerChartUpdate(chart, result, chosenTicker, chartOptions(interval))
+        chart = newTickerChartUpdate(chart, result, chosenTicker, chartOptions(interval))
     })
     
     chart.data.datasets.forEach(dataset=>{
@@ -379,4 +396,5 @@ function changeInterval(chart=globalChart, interval=globalInterval, period=globa
         console.log(dataset)
     })
     chart.update()
+    return chart;
 }
