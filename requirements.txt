@@ -5,4 +5,3 @@ gunicorn>=20.0.0
 flask_sqlalchemy>=2.0.0
 yfinance>=0.1.55
 flask_cors>=3.0.9
-os>=3.9.0
