@@ -20,6 +20,7 @@ d3.json(`./ticker=${chosenTicker}`, result => {
 buildIntervalRadio()
 buildPeriodDropdown()
 buildInfo()
+buildMostActive()
 
 
 //Chart init. Passed ticker string, result object from d3.json, and chart area (ctx from Charts.js)

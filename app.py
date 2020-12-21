@@ -3,6 +3,9 @@ from flask_cors import CORS
 import yfinance as yf
 import os
 from flask_sqlalchemy import SQLAlchemy
+import pandas as pd
+from sqlalchemy import *
+import time
 
 app = Flask(__name__)
 CORS(app)
@@ -54,7 +57,11 @@ def startEndRoute(ticker,s,e):
 def infoRoute(ticker):
     return infoQuery(ticker)
         
-        
+@app.route('/buildActive')
+def buildActive():
+    activeStock_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
+    top5_df = activeStock_df.iloc[range(0,5), range(0,6)]
+    return top5_df.to_json(orient='records', date_format='iso')
         
     
         

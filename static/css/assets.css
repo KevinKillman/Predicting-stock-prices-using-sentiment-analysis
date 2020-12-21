@@ -7,7 +7,20 @@
 	background: lightgrey
 }
 
+.mostActive h6{
+	text-align: center;
+}
 
+.addDataClass{
+	position: relative;
+	left:100%;
+	right: 0%;
+	margin: auto;
+}
+
+.foot {
+	height: 20px
+}
 
 .imgKEVIN {
 	display:block;
