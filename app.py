@@ -4,8 +4,10 @@ import yfinance as yf
 import os
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
-from sqlalchemy import *
 import time
+from sqlalchemy import create_engine, inspect
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
 
 app = Flask(__name__)
 CORS(app)
