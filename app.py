@@ -56,7 +56,7 @@ def infoRoute(ticker):
         
         
         
-        
+    
         
         
 if __name__ == "__main__":
