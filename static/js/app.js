@@ -133,13 +133,11 @@ function stockButtonOn(){
     globalPeriod = (d3.select('.period').node().value)
     
 
-    console.log(chosenTicker)
+    // console.log(chosenTicker)
     buildIntervalRadio(globalPeriod)
     
     d3.json(`./ticker=${chosenTicker}/period=${globalPeriod}/interval=${globalInterval}`, result => {
         cleanData(result)
-
-
         let options = chartOptions(globalInterval)
         newTickerChartUpdate(globalChart, result, chosenTicker, options)
     })
@@ -201,15 +199,7 @@ function newTickerChartUpdate(chart,  newData, ticker, options) {
 };
 
 
-function getData(ticker){
-    var data;
-    d3.json(`./ticker=${ticker}`, result => {
-        cleanData(result)
-        data = result;
-        return data
-    });
-    return data;
-};
+
 
 
 
