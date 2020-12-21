@@ -6,3 +6,4 @@ flask_sqlalchemy>=2.0.0
 yfinance>=0.1.55
 flask_cors>=3.0.9
 psycopg2-binary>=2.8.6
+ 
