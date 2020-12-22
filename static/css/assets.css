@@ -13,7 +13,9 @@
 
 .containedButttonKevin {
 	position: relative;
+	display: block;
 	margin-top: 10px;
+
 }
 
 .addDataClass{
