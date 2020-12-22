@@ -23,6 +23,11 @@ function buildMostActive(){
                         if (dataset.label === `${ticker} Open Price`) {
                             exists = true;
                         }
+                        if (dataset.label === `${chosenTicker} Close Price`){
+                            console.log(chosenTicker)
+                            dataset.data.pop()
+                            globalChart.update()
+                        }
                     })
                     if (!exists){
                         globalChart.data.datasets.push({
