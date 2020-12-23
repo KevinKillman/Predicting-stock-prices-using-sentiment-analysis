@@ -8,15 +8,16 @@ import time
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from config import sql_PASS, sql_USER, sql_HOST
+# from config import sql_PASS, sql_USER, sql_HOST
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = (f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/detlgil9o37p0")
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://wdhxiiknjuhadg:da2bd147a9c6e0598b1c396f5d798d05549149cba6d095975bf274bf22accf07@ec2-52-6-75-198.compute-1.amazonaws.com:5432/detlgil9o37p0"
 
 # Remove tracking modifications
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
 engine = db.engine
 
 def infoQuery(ticker):
