@@ -12,11 +12,16 @@ from sqlalchemy.orm import Session
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '') or "sqlite:///db.sqlite"
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '')
 
 # Remove tracking modifications
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+engine = create_engine(f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/detlgil9o37p0")
+Base = automap_base()
+Base.prepare(engine, reflect = True)
+session = Session(engine)
 
 def infoQuery(ticker):
     return yf.Ticker(ticker).info
