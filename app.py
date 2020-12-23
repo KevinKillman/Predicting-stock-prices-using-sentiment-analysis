@@ -8,7 +8,9 @@ import time
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
+
  # from config import sql_PASS, sql_USER, sql_HOST
+
 app = Flask(__name__)
 CORS(app)
 
@@ -65,7 +67,7 @@ def infoRoute(ticker):
 def buildActive():
     activeStock_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
     top5_df = activeStock_df.iloc[range(0,5), range(0,6)]
-
+    
     return top5_df.to_json(orient='records', date_format='iso')
 
 @app.route('/piechart=<string:tickerString>')
@@ -80,24 +82,26 @@ def pieChart(tickerString):
             volumeDict['volumes'].append(float(result[0]))
     return jsonify(volumeDict)
     
-# @app.route('/buildsql')
-# def buildSql():
-#     search = ''
-#     searchList = []
-#     count = 0
-#     while count<5:
-#         search += top5_df['Symbol'].iloc[count] + ' '
-#         searchList.append(top5_df['Symbol'].iloc[count])
-#         count+=1
-#     tickers = yf.Tickers(search)
-#     stockDict = {}
-#     for name in tickers.tickers:
-#         stockSingle_df = name.history().iloc[:,range(0,5)]
-#         time.sleep(0.1)
-#         symbol = name.info['symbol']
-#         stockDict.update({symbol:stockSingle_df})
-#     for (ticker, df) in stockDict.items():
-#         df.to_sql(ticker, engine, if_exists='replace')
+@app.route('/buildsql')
+def buildSql():
+    top5_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
+    search = ''
+    searchList = []
+    count = 0
+    while count<5:
+        search += top5_df['Symbol'].iloc[count] + ' '
+        searchList.append(top5_df['Symbol'].iloc[count])
+        count+=1
+    tickers = yf.Tickers(search)
+    stockDict = {}
+    for name in tickers.tickers:
+        stockSingle_df = name.history().iloc[:,range(0,5)]
+        time.sleep(0.1)
+        symbol = name.info['symbol']
+        stockDict.update({symbol:stockSingle_df})
+    for (ticker, df) in stockDict.items():
+        df.to_sql(ticker, engine, if_exists='replace')
+    return jsonify('Hello World')
         
 if __name__ == "__main__":
     app.run(debug=True)   

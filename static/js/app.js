@@ -16,9 +16,10 @@ d3.json(`./ticker=${chosenTicker}`, result => {
     cleanData(result) //Data formatting
     var ctx = document.getElementById('myChart').getContext('2d'); //div class="myChart"
     globalChart = init_chart(chosenTicker, result, ctx);
-    // console.log(globalChart)
 });
 //Functions to build rest of page
+d3.json('./buildsql', result => {
+})
 buildIntervalRadio()
 buildPeriodDropdown()
 buildInfo()
@@ -135,7 +136,6 @@ function stockButtonOn(){
     globalPeriod = (d3.select('.period').node().value)
     
 
-    // console.log(chosenTicker)
     buildIntervalRadio(globalPeriod)
     
     d3.json(`./ticker=${chosenTicker}/period=${globalPeriod}/interval=${globalInterval}`, result => {
@@ -181,12 +181,10 @@ function newTickerChartUpdate(chart,  newData, ticker, options) {
     chart.data.labels = newLabel;   //X Axis
     chart.data.datasets.forEach((dataset) => {
         if (dataset.label.split(' ')[1] ==='Open'){
-            // console.log('Open', dataset.label)
             dataset.data.pop();
             dataset.data = newData.map(element => element.Open)
             dataset.label = `${ticker} Open Price`        //Line Label
         }else if (dataset.label.split(' ')[1] ==='Close'){
-            // console.log('Close', dataset.label)
             dataset.data.pop();
             dataset.label = `${ticker} Close Price`
             dataset.data = newData.map(element => element.Close)
@@ -205,27 +203,12 @@ function newTickerChartUpdate(chart,  newData, ticker, options) {
 
 
 
-function colorLogic(context) {
-    var index = context.dataIndex;
-    var value = context.dataset.data[index];
-    var prev_value;
-    if (index === 0 | index === 1 ){
-        prev_value =0
-    }else{
-        prev_value = context.dataset.data[index-1]
-    }
-    return prev_value>value ? 'red':
-        prev_value<=value?'green':
-        'green';
-};
-
 
 
 function chartOptions(interval=globalInterval){
     var checkIntervalIntraday = ['1m','2m','5m','15m','30m','60m','90m','1h']
     var checkIntervalMonth = ['1d','5d','1wk','1mo','3mo']
     let options;
-    console.log(globalPeriod)
     if (checkIntervalIntraday.includes(interval) & globalPeriod==='1d'){
         options = {
             responsive: true,
@@ -434,8 +417,6 @@ function chartOptions(interval=globalInterval){
         
         }
     }
-    // console.log(options)
-    // console.log(globalChart.options.scales.xAxes)
     return options;
 }
 
@@ -461,7 +442,6 @@ function changeInterval(chart=globalChart, interval=globalInterval, period=globa
         }else{
             dataset.pointRadius= .75
         }
-        // console.log(dataset)
     })
     chart.update()
     return chart;
@@ -495,7 +475,6 @@ function buildInfo(){
         check.remove()
     }
     d3.json(`./info/ticker=${chosenTicker}`, function(response){
-        console.log(response)
         infoHead.html(`<img src="${response.logo_url}" alt="oops" class="img-thumbnail imgKEVIN" >`)
         infoHead.append('h4').text(`${response.shortName}`).classed("titleLogo", true)
         var infoArray = ['sector', 'dayHigh','dayLow','fiftyDayAverage', 'fiftyTwoWeekHigh', 'fiftyTwoWeekLow']
