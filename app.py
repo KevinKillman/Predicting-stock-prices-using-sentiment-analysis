@@ -8,7 +8,7 @@ import time
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from config import sql_PASS, sql_USER, sql_HOST
+# from config import sql_PASS, sql_USER, sql_HOST
 app = Flask(__name__)
 CORS(app)
 
