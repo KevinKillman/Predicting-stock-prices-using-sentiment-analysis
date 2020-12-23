@@ -1,3 +1,3 @@
-sql_PASS =
-sql_USER = 
-sql_Host = 
+sql_PASS = ''
+sql_USER = ''
+sql_Host = ''
