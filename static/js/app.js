@@ -8,6 +8,8 @@ var globalInterval='1d'; //Interval that data can be viewed at. 1min incremented
 var globalPeriod='ytd'; //Data reporting period. Starting from today moving back, 1d (day) incremented to 10y (years)
                   //includes values: 'ytd' and 'max'
 var allowedIntervalValues=['1d','5d','1wk','1mo','3mo']; //Accepted intervals for period
+var globalPie; //global pie chart
+
 
 //API request
 d3.json(`./ticker=${chosenTicker}`, result => {

@@ -11,11 +11,16 @@
 	text-align: center;
 }
 
-.containedButttonKevin {
-	position: relative;
-	display: block;
+.containedButtonKevin {
+	/* position: relative;
+	display: block; */
 	margin-top: 10px;
 
+}
+
+.containedButtonKevin h7{
+	margin-left: 5px;
+	padding-top: 5px;
 }
 
 .addDataClass{

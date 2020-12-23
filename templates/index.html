@@ -6,8 +6,6 @@
     <title>Stock Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/assets.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-
 </head>
 <body >
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -15,14 +13,13 @@
             <label for="ticker">Stock Ticker Symbol</label>
             <input name="ticker" id="tickerInput" type="text" default="Ticker" value="AAPL">
             <label for="period">Period of Data: </label>
-            
         </div>
 
         <button class="btn btn-dark" onclick="stockButtonOn()">
             Build
         </button>
 
-
+ 
         </div>
       </nav>
     <div class="container chart-container">
@@ -46,9 +43,13 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-md-9 mostActive">
+            <div class="col-md-3 mostActive">
                 <h6>Most Active Stocks Today</h6>
             </div>
+            <div class="col-md-9 pickMe" >
+                <canvas id="mostActiveChart"></canvas>
+            </div>
+            <div class="mostActiveInfoPane"></div>
         </div>
     </div>
     <footer class="foot">
