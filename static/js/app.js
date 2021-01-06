@@ -75,7 +75,7 @@ function buildPeriodDropdown(){
 
     //Selecting div by ID(its in the navbar) and appending a dropdown with all options in above array
     var form = d3.select("#stockInputForm")
-    var select = form.append('select').classed("period", true).attr("name", "period").attr("value", "ytd")
+    var select = form.append('select').classed("period", true).attr("name", "period").attr("value", "1y")
     periodOptions.forEach(period => {
         select.append('option')
             .attr('value', `${period}`)
