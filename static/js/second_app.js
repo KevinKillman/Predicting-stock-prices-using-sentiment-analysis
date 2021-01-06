@@ -79,6 +79,19 @@ function buildMostActive(){
                             newDiv.html(`<img src="${recall.logo_url}" alt="oops" class="img-thumbnail imgKEVIN" >`)
                             newDiv.append('h4').text(`${recall.shortName}`).classed("titleLogo", true)
                         })
+                    },
+                    tooltips: {
+                        callbacks:{
+                            title: function([tooltipItem], data) {
+                                let education = data.labels[tooltipItem.index]
+                                return education;
+                            },
+                            label: function(tooltipItem, data) {
+                                let value = data.datasets[0].data[tooltipItem.index]
+                                let title = `${Math.round(value)}`
+                                return title;
+                            }
+                        }
                     }
                 } 
                 
