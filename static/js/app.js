@@ -180,6 +180,7 @@ function newTickerChartUpdate(chart,  newData, ticker, options) {
     }
     chart.data.labels = newLabel;   //X Axis
     chart.data.datasets.forEach((dataset) => {
+        
         if (dataset.label.split(' ')[1] ==='Open'){
             dataset.data.pop();
             dataset.data = newData.map(element => element.Open)
@@ -190,7 +191,8 @@ function newTickerChartUpdate(chart,  newData, ticker, options) {
             dataset.data = newData.map(element => element.Close)
 
 
-        }
+        } 
+        
     });
     chart.options=options
     chart.update();
@@ -240,15 +242,15 @@ function chartOptions(interval=globalInterval){
             tooltips: {
                 mode: 'index',
                 callbacks: {
-                    label: function(tooltipItem, data) {
-                        let label = data.datasets[tooltipItem.datasetIndex].label;
+                    // label: function(tooltipItem, data) {
+                    //     let label = data.datasets[tooltipItem.datasetIndex].label;
     
-                        if (label) {
-                            label += ': ';
-                        }
-                        label += Math.round(tooltipItem.yLabel * 100) / 100;
-                        return label;
-                    },
+                    //     if (label) {
+                    //         label += ': ';
+                    //     }
+                    //     label += Math.round(tooltipItem.yLabel * 100) / 100;
+                    //     return label;
+                    // },
                     title: function([tooltipItem], data) {
                         let label = data.datasets[tooltipItem.datasetIndex].label;
                         let title = label.split(' ')[0]

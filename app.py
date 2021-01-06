@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','')  #or f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/detlgil9o37p0"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','')  or #f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/detlgil9o37p0"
 
 # Remove tracking modifications
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -77,7 +77,10 @@ def pieChart(tickerString):
     for ticker in tickerString.split(','):
         for result in engine.execute(f'SELECT AVG("Volume") FROM "{ticker}"'):
             volumeDict['labels'].append(ticker)
-            volumeDict['volumes'].append(float(result[0]))
+            try:
+                volumeDict['volumes'].append(float(result[0]))
+            except TypeError:
+                next
     return jsonify(volumeDict)
     
 @app.route('/buildsql')
