@@ -4,22 +4,25 @@
 // user defined in stockButtonOn(), init_chart(), and handleRadio()
 var chosenTicker = 'AAPL'
 var globalChart; //Chart object; globalChart.data.datasets etc..
-var globalInterval='1d'; //Interval that data can be viewed at. 1min incremented to 1mo (month). Limited by chosen period.
-var globalPeriod='ytd'; //Data reporting period. Starting from today moving back, 1d (day) incremented to 10y (years)
+var globalInterval='1m'; //Interval that data can be viewed at. 1min incremented to 1mo (month). Limited by chosen period.
+var globalPeriod='1d'; //Data reporting period. Starting from today moving back, 1d (day) incremented to 10y (years)
                   //includes values: 'ytd' and 'max'
 var allowedIntervalValues=['1d','5d','1wk','1mo','3mo']; //Accepted intervals for period
 var globalPie; //global pie chart
 
 
 //API request
-d3.json(`./ticker=${chosenTicker}`, result => {
+d3.json(`./ticker=${chosenTicker}/period=${globalPeriod}/interval=${globalInterval}`, result => {
     cleanData(result) //Data formatting
     var ctx = document.getElementById('myChart').getContext('2d'); //div class="myChart"
     globalChart = init_chart(chosenTicker, result, ctx);
-});
+    d3.json('./buildsql', resultBUILD => {
+        
+    });
 //Functions to build rest of page
-d3.json('./buildsql', result => {
-})
+
+    
+});
 buildIntervalRadio()
 buildPeriodDropdown()
 buildInfo()
@@ -31,38 +34,69 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
     //unpacking data
     var yOpen = dataset.map(element => element.Open)
     var yClose = dataset.map(element => element.Close)
-    var xTime = dataset.map(element => element.Date)
+    
+    var xTime = dataset.map(element => {
+        if(element.Date){
+            // console.log(element)
+            return (element.Date)
+        }
+        if (element.Datetime){
+            // console.log(element)
+            return (element.Datetime)
+    }});
     //Charts.js Line Chart
     //Chart is window resize responsive. Uses parent div to resize. Canvas tag must always be inside a container.
-    var myLineChart = new Chart(ctx, {
-        type: 'line',
-        data: { 
-            labels: xTime, //X Axis
-            //Each line is passed as an object in an array
-            datasets: [{
-                label: `${ticker} Open Price`,
-                data: yOpen,
-                fill: false,
-                pointRadius: .9,
-                pointHoverRadius: 3,
-                borderColor: 'green',
-                borderWidth: 1,
-                lineTension:0
+    var myLineChart
+    if (globalPeriod === "1d"){
+        myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: { 
+                labels: xTime, //X Axis
+                //Each line is passed as an object in an array
+                datasets: [{
+                    label: `${ticker} Price`,
+                    data: yOpen,
+                    fill: false,
+                    pointRadius: .9,
+                    pointHoverRadius: 1,
+                    borderColor: 'blue',
+                    borderWidth: 1,
+                    lineTension:0
+                }]
             },
-        {
-            label: `${ticker} Close Price`,
-            data: yClose,
-            fill: false,
-            pointRadius: .5,
-            pointHoverRadius: 3,
-            borderColor: 'red',
-            borderWidth: 1,
-            lineTension:0
-        }]
-        },
-        options: chartOptions(), //Options logic
-        
-    });
+            options: chartOptions() //Options logic
+        });
+    }else{    
+        myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: { 
+                labels: xTime, //X Axis
+                //Each line is passed as an object in an array
+                datasets: [{
+                    label: `${ticker} Open Price`,
+                    data: yOpen,
+                    fill: false,
+                    pointRadius: .9,
+                    pointHoverRadius: 3,
+                    borderColor: 'green',
+                    borderWidth: 1,
+                    lineTension:0
+                },
+                {
+                    label: `${ticker} Close Price`,
+                    data: yClose,
+                    fill: false,
+                    pointRadius: .5,
+                    pointHoverRadius: 3,
+                    borderColor: 'red',
+                    borderWidth: 1,
+                    lineTension:0
+                }]
+            },
+            options: chartOptions(), //Options logic
+            
+        });
+    }
     return myLineChart; //returns chart object to global variable 
 };
 
@@ -71,11 +105,11 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
 
 function buildPeriodDropdown(){
     //Only options API allows
-    var periodOptions = ['ytd','1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','max']
+    var periodOptions = ['1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','max','ytd']
 
     //Selecting div by ID(its in the navbar) and appending a dropdown with all options in above array
     var form = d3.select("#stockInputForm")
-    var select = form.append('select').classed("period", true).attr("name", "period").attr("value", "1y")
+    var select = form.append('select').classed("period", true).attr("name", "period")
     periodOptions.forEach(period => {
         select.append('option')
             .attr('value', `${period}`)
@@ -157,7 +191,6 @@ function cleanData(result) {
         if(element.Date){
             element.Date = moment(element.Date);
         }
-
         element.Volume = +element.Volume;
         if (element.Datetime){
             element.Datetime = moment(element.Datetime)
@@ -166,38 +199,54 @@ function cleanData(result) {
 };
 
 function newTickerChartUpdate(chart,  newData, ticker, options) {
-    let newLabel;
+    let newXAxis;
     if (newData[0].Date){
-        newLabel = newData.map(element => element.Date)
+        newXAxis = newData.map(element => moment(element.Date))
     }
     if (newData[0].Datetime){
-        newLabel = newData.map(element => element.Datetime)
+        newXAxis = newData.map(element => moment(element.Datetime))
     }
 
     let count =chart.data.labels.length;
-    for(let i=0; i<count; i++){
-        chart.data.labels.pop()
-    }
-    chart.data.labels = newLabel;   //X Axis
+    // console.log(chart.data)
+    // for(let i=0; i<count; i++){
+    //     chart.data.labels.pop()
+    // }
+    chart.data.labels = newXAxis;   //X Axis
     chart.data.datasets.forEach((dataset) => {
+        // dataset.pop()
+        console.log(dataset)
+        // console.log(dataset)
+        // // if (dataset.label.split(' ')[1] ==='Open'){
+        // console.log(dataset.data[0])
+        // console.log((dataset.data).length)
+        while ((dataset.data).length > 0){
+            dataset.data.pop()
+        }
         
-        if (dataset.label.split(' ')[1] ==='Open'){
-            dataset.data.pop();
-            dataset.data = newData.map(element => element.Open)
-            dataset.label = `${ticker} Open Price`        //Line Label
-        }else if (dataset.label.split(' ')[1] ==='Close'){
-            dataset.data.pop();
-            dataset.label = `${ticker} Close Price`
-            dataset.data = newData.map(element => element.Close)
+        console.log(dataset)
+        newData.forEach(element => dataset.data.push(element.Open))
+        console.log(dataset)
+        chart.update()
+        // console.log(dataset)
+        // // newData.forEach(element => dataset.data.push(element.Open))
+        // dataset.label = `${ticker}`
+        // dataset.data =  newData.map(element=>element.Open)   
+        // chart.update({duration: 500, 
+        //                 })
+        // }else if (dataset.label.split(' ')[1] ==='Close'){
+        //     dataset.data.pop();
+        //     dataset.label = `${ticker} Close Price`
+        //     dataset.data = newData.map(element => element.Close)
 
 
-        } 
+        // } 
         
     });
     chart.options=options
     chart.update();
 
-    return chart;
+
 };
 
 
@@ -258,6 +307,7 @@ function chartOptions(interval=globalInterval){
                         let day = splitter[0]
                         let time = splitter[2]
                         title += ` ${day} ${time}`
+
                         return title;
                     }
                 }
@@ -331,7 +381,8 @@ function chartOptions(interval=globalInterval){
                             label = (label.split(' ')[1])
                             label += ': ';
                         }
-                        label += `$${Math.round(tooltipItem.yLabel * 100) / 100}`;
+                        label += `$${Math.round(tooltipItem.yLabel*100)/100}`;  //Multiply and Divide by 100 to get 2 decimal places
+                        // console.log(label)
                         return label;
                     },
                     
@@ -485,5 +536,5 @@ function buildInfo(){
             infoList.append("li").text(`${info}: ${response[info]}`)
         })
     })
-}
+};
 

@@ -9,12 +9,12 @@ from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 
- # from config import sql_PASS, sql_USER, sql_HOST
+from config import sql_PASS, sql_USER, sql_HOST
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','')  #or f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/detlgil9o37p0"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','')  or f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/stockDashboard_db"
 
 # Remove tracking modifications
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -35,9 +35,21 @@ def queryAPIstartEnd(ticker, s='1986-03-13', e='2020-12-14'):
 
     return yf.Ticker(ticker).history(start=s, end=e).reset_index(inplace=True).to_json(orient='records', date_format='iso')
 
+# def exceptionDF():
+#     tickers = ['AAPL', 'GME', 'AMC', 'MSFT']
+#     ticker_obj = yf.Tickers(tickers=tickers)
+#     full_df = pd.DataFrame(columns=['Ticker', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividends','Stock Splits'])
+#     for x in tickers:
+#         info = yf.Ticker(x)
+#         temp_df = info.history(period=)
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/machine_learning')
+def machine_learning():
+    return render_template('machine_learning.html')
 
 @app.route('/ticker=<string:ticker>')             
 def tickerRoute(ticker):
@@ -65,7 +77,12 @@ def infoRoute(ticker):
         
 @app.route('/buildActive')
 def buildActive():
-    activeStock_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
+    try:
+        activeStock_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
+    except ValueError:
+        temp = pd.read_html('https://finance.yahoo.com/trending-tickers')[0]
+        temp = temp.iloc[range(0,5), range(0,6)]
+        return temp.to_json(orient='records')
     top5_df = activeStock_df.iloc[range(0,5), range(0,6)]
     
     return top5_df.to_json(orient='records', date_format='iso')
@@ -87,7 +104,10 @@ def pieChart(tickerString):
     
 @app.route('/buildsql')
 def buildSql():
-    top5_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
+    try:
+        top5_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
+    except ValueError:
+        top5_df = pd.read_html('https://finance.yahoo.com/trending-tickers')[0]
     search = ''
     searchList = []
     count = 0

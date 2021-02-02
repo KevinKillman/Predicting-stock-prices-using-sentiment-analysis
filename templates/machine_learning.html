@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/assets.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="btn btn-dark navbar-nav" style="color:green; background-color: white; padding-left: 5px;"  onclick='redirectHOME()'>Dashboard</button>
+        
+    </nav>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" style="text-align: center;">
+                <h2 >Summary<h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>The goal of this project was to determine if there was a tangible relationship between a sentiment analysis of Twitter and stock pricing. Multiple machine learning algorithms were used to examine this relationship. Unfortunately, only a weak correlation was found with the data used, not enough to make any reasonable predictions off of.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3 style="text-align: center;">Algorithms Used</h3>
+                <hr>
+                <ul style="list-style: none;">                    
+                    <li>Linear Regression</li>
+                    <li>Random Forest</li>
+                    <li>Decision Tree</li>
+                    <li>K Nearest Neighbors</li> 
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h3 style="text-align: center;">Data Sources</h3>
+                <hr>
+                <ul style="list-style: none;">
+                    <li>Yahoo Finance API</li>
+                    <li>Twitter API</li>
+                    <li>Python Libraries used to access these API's:</li>
+                    <ul style="text-indent: 15px;">
+                        <li><a href="https://www.tweepy.org/">Tweepy</a></li>
+                        <li><a href="https://pypi.org/project/yfinance/">yFinance</a></li>
+                    </ul>
+                    <li><a href="https://github.com/cjhutto/vaderSentiment">vaderSentiment</a> Analysis python library</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class='row'>
+            <div class="col-md-6">
+                <h4>Method</h4>
+                <ol>
+                    <li>Retrieve Data from Sources and clean it</li>
+                    <ul>
+                        <li>Using the python libraries required little data cleaning</li>
+                        <li>As proof of concept, a keyword search of a companies stock ticker was used to filter Twitter. The method here could be improved</li>
+                    </ul>
+                    <li>Performed sentiment analysis using vaderSentiment</li>
+                    <ul>
+                        <li>Trying to determine user sentiment about the company</li>
+                    </ul>
+                    <li>Aggregate sentiment scores by day</li>
+                    <li>Join sentiment and stock price data on date</li>
+                    <li>Create Machine Learning Model to make predictions based upon one of the algorithms</li>
+                    <li>Score Machine Learning Model</li>
+                </ol>
+            </div>
+            <div class="col-md-6">
+                <h4>Technical Challenges</h4>
+                <ul>
+                    <li>Twitter API only allows a search of last 7 days</li>
+                    <li>Twitter also does not allow intraday granularity for time measurements.</li>
+                    <ul>
+                        <li>Because of this, aggregating sentiment data on a time scale less than a day creates many time-consuming problems, but also leaves only 7 data points per stock ticker</li>
+                        <li>To increase the size of the dataset, more tickers were added to the search parameters</li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3 style="text-align: center;">Linear Regression</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <img src="{{ url_for('static', filename='pics/scatter.png') }}">
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-7">
+                <br>
+                <br>
+                <ul>
+                    <li>From looking at data, fairly clear there is no strong correlation</li>
+                    <li>Regression model scores lowest out of all models used</li>
+                    <li>R squared scores were regularly close to 0</li>
+                    <li>This model would not be a good predictor</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/paging.js') }}"></script>
+
+
+    <!-- BootStrap Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>
