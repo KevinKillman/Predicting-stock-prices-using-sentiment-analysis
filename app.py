@@ -9,7 +9,7 @@ from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 
-# from config import sql_PASS, sql_USER, sql_HOST
+#from config import sql_PASS, sql_USER, sql_HOST
 
 app = Flask(__name__)
 CORS(app)
@@ -89,12 +89,21 @@ def buildActive():
 
 @app.route('/piechart=<string:tickerString>')
 def pieChart(tickerString):
+    print('pie')
     volumeDict = {
         'labels': [],
         'volumes': []
     }
     for ticker in tickerString.split(','):
-        for result in engine.execute(f'SELECT AVG("Volume") FROM "{ticker}"'):
+        times_tried=0
+        received=False
+        try:
+            query = engine.execute(f'SELECT AVG("Volume") FROM "{ticker}"')
+            received=True
+        except:
+            time.sleep(5)
+            times_tried+=1
+        for result in query:
             volumeDict['labels'].append(ticker)
             try:
                 volumeDict['volumes'].append(float(result[0]))
@@ -104,6 +113,7 @@ def pieChart(tickerString):
     
 @app.route('/buildsql')
 def buildSql():
+    print('buildSQL')
     try:
         top5_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
     except ValueError:
