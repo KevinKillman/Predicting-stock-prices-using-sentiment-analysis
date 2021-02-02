@@ -73,3 +73,16 @@
 	color: white;
 	margin-left: 10px;
 }
+
+.mlinfopane {
+	background: white;
+	border: solid;
+	padding:3px;
+
+}
+
+.mlbackground {
+	background: grey;
+}
+
+#responsive-image {  width: 100%;  height: auto; } 

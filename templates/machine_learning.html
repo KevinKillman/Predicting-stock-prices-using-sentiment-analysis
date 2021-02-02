@@ -8,26 +8,26 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
-<body>
+<body class="mlbackground">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <button class="btn btn-dark navbar-nav" style="color:green; background-color: white; padding-left: 5px;"  onclick='redirectHOME()'>Dashboard</button>
         
     </nav>
-    
+    <br>
     <div class="container">
-        <div class="row">
+        <div class="row mlinfopane">
             <div class="col-md-12" style="text-align: center;">
+
                 <h2 >Summary<h2>
-                <hr>
+                <hr></hr>
+                <div class="col-md-12 ">
+                    <h6>The goal of this project was to determine if there was a tangible relationship between a sentiment analysis of Twitter and stock pricing. Multiple machine learning algorithms were used to examine this relationship. Unfortunately, only a weak correlation was found with the data used, not enough to make any reasonable predictions off of.</h6>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <p>The goal of this project was to determine if there was a tangible relationship between a sentiment analysis of Twitter and stock pricing. Multiple machine learning algorithms were used to examine this relationship. Unfortunately, only a weak correlation was found with the data used, not enough to make any reasonable predictions off of.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
+        <br>
+        <div class="row mlinfopane">
+            <div class="col-md-6 ">
                 <h3 style="text-align: center;">Algorithms Used</h3>
                 <hr>
                 <ul style="list-style: none;">                    
@@ -37,7 +37,7 @@
                     <li>K Nearest Neighbors</li> 
                 </ul>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 ">
                 <h3 style="text-align: center;">Data Sources</h3>
                 <hr>
                 <ul style="list-style: none;">
@@ -52,10 +52,11 @@
                 </ul>
             </div>
         </div>
-        <hr>
-        <div class='row'>
+        <br>
+        <div class='row mlinfopane'>
             <div class="col-md-6">
-                <h4>Method</h4>
+                <h3 style="text-align: center;">Method</h3>
+                <hr>
                 <ol>
                     <li>Retrieve Data from Sources and clean it</li>
                     <ul>
@@ -73,7 +74,8 @@
                 </ol>
             </div>
             <div class="col-md-6">
-                <h4>Technical Challenges</h4>
+                <h3 style="text-align: center;">Technical Challenges</h3>
+                <hr>
                 <ul>
                     <li>Twitter API only allows a search of last 7 days</li>
                     <li>Twitter also does not allow intraday granularity for time measurements.</li>
@@ -84,17 +86,16 @@
                 </ul>
             </div>
         </div>
-        <div class="row">
+        <br>
+        <div class="row mlinfopane">
             <div class="col-md-12">
                 <h3 style="text-align: center;">Linear Regression</h3>
+                <hr>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">
-                <img src="{{ url_for('static', filename='pics/scatter.png') }}">
+            <div class="col-md-5">
+                <img id="responsive-image" src="{{ url_for('static', filename='pics/scatter.png') }}">
             </div>
-            <div class="col-md-2"></div>
-            <div class="col-md-7">
+            <div class="col-md-7 col-sm-12">
                 <br>
                 <br>
                 <ul>
@@ -105,6 +106,57 @@
                 </ul>
             </div>
         </div>
+        <br>
+        <div class="row mlinfopane">
+            <div class="col-md-12 ">
+                <h3 style="text-align: center;">Decision Tree</h3>
+                <hr>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li>Had to first transform data into categorical. Achieved by binning tweets according to their overall compound score.</li>
+                    <ul>
+                        <li>Compound Score is vaderSentiment's overall sentiment measure for the piece of text it is examining</li>
+                    </ul>
+                    <li>Dependent is the change in stock price from previous day.</li>
+                    <li>3 Sentiment bins:</li>
+                    <ul>
+                        <li>Positive</li>
+                        <li>Negative</li>
+                        <li>Neutral</LI>
+                    </ul>
+                    <li>Model consistently scores around .35. Indicates a correlation, but more feature refinement is required to increase the score.</li>
+                    <li>Random forest model was used, scored the same as Decision Tree, indicating that decision tree was using the best tree.</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <img id="responsive-image" src="{{ url_for('static', filename='pics/tree.png') }}">
+                <img id="responsive-image" src="{{ url_for('static', filename='pics/bar.png') }}">
+            </div>
+        </div>
+        <br>
+        <div class="row mlinfopane">
+            <div class="col-md-12">
+                <h3 style="text-align: center;">Conclusions?</h3>
+                <hr>
+            </div>
+            <hr>
+            <div class="col-md-6">
+                <ul>
+                    <li>With the data that is used, the machine learning models were not able to make accurate enough predictions to be relevant towards real life trading</li>
+                    <li>However, using some of the classification algorithms, a correlation was detected between the sentiment data gathered and how a company's stock price changes</li>
+                    <li>Regression showed that there was not a linear relationship between the two variables.</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5 style="text-decoration: underline; text-align: center;">Moving Forward</h5>
+                <ul>
+                    <li>Feature refinement and aggregating on a smaller timescale is predicted to improve the classification models score</li>
+                    <li>Only a keyword search of a company's stock ticker was used to search Twitter. This can be improved and refined</li>
+                </ul>
+            </div>
+        </div>
+        <br>
     </div>
 
 
