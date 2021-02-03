@@ -18,19 +18,19 @@ function buildMostActive(){
                     cleanData(response)
                     let exists = false;
                     globalChart.data.datasets.forEach((dataset) =>{
-                        if (dataset.label === `${ticker} Open Price`) {
+                        if (dataset.label === `${ticker} Price`) {
                             exists = true;
                         }
-                        if (dataset.label === `${chosenTicker} Close Price`){
-                            console.log(chosenTicker)
-                            dataset.data.pop()
-                            globalChart.update()
-                        }
+                        
+                    })
+                    
+                    xData = response.map((el) => {
+                        return {x:el.Date, y:el.Open}
                     })
                     if (!exists){
                         globalChart.data.datasets.push({
-                            label: `${ticker} Open Price`,
-                            data: response.map(el=>el.Open),
+                            label: `${ticker} Price`,
+                            data: response.map((el) => el.Open),
                             fill: false,
                             pointRadius: .9,
                             pointHoverRadius: 3,
@@ -40,7 +40,6 @@ function buildMostActive(){
                         })
                     }
                     globalChart.update()
-                    console.log(randomHsl())
                 })
             })
         })

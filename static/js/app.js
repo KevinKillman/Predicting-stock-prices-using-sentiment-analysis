@@ -46,6 +46,10 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
     }});
     //Charts.js Line Chart
     //Chart is window resize responsive. Uses parent div to resize. Canvas tag must always be inside a container.
+    xData = yOpen.map((value, index) => {
+        return {x: xTime[index], y:value}
+    })
+    
     var myLineChart
     if (globalPeriod === "1d"){
         myLineChart = new Chart(ctx, {
@@ -73,22 +77,12 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
                 labels: xTime, //X Axis
                 //Each line is passed as an object in an array
                 datasets: [{
-                    label: `${ticker} Open Price`,
-                    data: yOpen,
+                    label: `${ticker} Price`,
+                    data: xData,
                     fill: false,
                     pointRadius: .9,
                     pointHoverRadius: 3,
                     borderColor: 'green',
-                    borderWidth: 1,
-                    lineTension:0
-                },
-                {
-                    label: `${ticker} Close Price`,
-                    data: yClose,
-                    fill: false,
-                    pointRadius: .5,
-                    pointHoverRadius: 3,
-                    borderColor: 'red',
                     borderWidth: 1,
                     lineTension:0
                 }]
@@ -175,7 +169,7 @@ function stockButtonOn(){
     d3.json(`./ticker=${chosenTicker}/period=${globalPeriod}/interval=${globalInterval}`, result => {
         cleanData(result)
         let options = chartOptions(globalInterval)
-        newTickerChartUpdate(globalChart, result, chosenTicker, options)
+        globalChart = newTickerChartUpdate(globalChart, result, chosenTicker, options)
     })
 }
 
@@ -200,53 +194,33 @@ function cleanData(result) {
 
 function newTickerChartUpdate(chart,  newData, ticker, options) {
     let newXAxis;
+    if (chart.data.datasets.length>1){
+        
+        chart.destroy()
+        
+        let ctx = document.getElementById('myChart').getContext('2d'); //div class="myChart"
+        chart = init_chart(chosenTicker, newData, ctx);
+        console.log('destroying')
+    }
     if (newData[0].Date){
         newXAxis = newData.map(element => moment(element.Date))
+        test = 'Date'
     }
     if (newData[0].Datetime){
         newXAxis = newData.map(element => moment(element.Datetime))
+        test = 'Datetime'
     }
-
-    let count =chart.data.labels.length;
-    // console.log(chart.data)
-    // for(let i=0; i<count; i++){
-    //     chart.data.labels.pop()
+    chart.data.labels = newXAxis
+    chart.data.datasets[0].data = newData.map((data) => data.Open)
+    
+    chart.data.datasets[0].label = `${ticker} Price`
+    chart.update()
+    // if (chart.data.datasets.length>1){
+    //     while (chart.data.datasets.length>1){
+    //         chart.data.datasets.pop()
+    //     }
     // }
-    chart.data.labels = newXAxis;   //X Axis
-    chart.data.datasets.forEach((dataset) => {
-        // dataset.pop()
-        console.log(dataset)
-        // console.log(dataset)
-        // // if (dataset.label.split(' ')[1] ==='Open'){
-        // console.log(dataset.data[0])
-        // console.log((dataset.data).length)
-        while ((dataset.data).length > 0){
-            dataset.data.pop()
-        }
-        
-        console.log(dataset)
-        newData.forEach(element => dataset.data.push(element.Open))
-        console.log(dataset)
-        chart.update()
-        // console.log(dataset)
-        // // newData.forEach(element => dataset.data.push(element.Open))
-        // dataset.label = `${ticker}`
-        // dataset.data =  newData.map(element=>element.Open)   
-        // chart.update({duration: 500, 
-        //                 })
-        // }else if (dataset.label.split(' ')[1] ==='Close'){
-        //     dataset.data.pop();
-        //     dataset.label = `${ticker} Close Price`
-        //     dataset.data = newData.map(element => element.Close)
-
-
-        // } 
-        
-    });
-    chart.options=options
-    chart.update();
-
-
+    return chart;
 };
 
 
@@ -538,3 +512,11 @@ function buildInfo(){
     })
 };
 
+function resetChart(){
+    globalChart.destroy()
+    d3.json(`./ticker=${chosenTicker}/period=${globalPeriod}/interval=${globalInterval}`, result => {
+        cleanData(result) //Data formatting
+        var ctx = document.getElementById('myChart').getContext('2d'); //div class="myChart"
+        globalChart = init_chart(chosenTicker, result, ctx);
+    })
+}
