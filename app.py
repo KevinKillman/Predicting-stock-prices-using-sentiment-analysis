@@ -10,6 +10,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 
 #from config import sql_PASS, sql_USER, sql_HOST
+from config import sql_PASS, sql_USER, sql_HOST
 
 app = Flask(__name__)
 CORS(app)
@@ -35,13 +36,6 @@ def queryAPIstartEnd(ticker, s='1986-03-13', e='2020-12-14'):
 
     return yf.Ticker(ticker).history(start=s, end=e).reset_index(inplace=True).to_json(orient='records', date_format='iso')
 
-# def exceptionDF():
-#     tickers = ['AAPL', 'GME', 'AMC', 'MSFT']
-#     ticker_obj = yf.Tickers(tickers=tickers)
-#     full_df = pd.DataFrame(columns=['Ticker', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividends','Stock Splits'])
-#     for x in tickers:
-#         info = yf.Ticker(x)
-#         temp_df = info.history(period=)
 
 @app.route('/')
 def index():
