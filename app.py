@@ -15,7 +15,7 @@ from sqlalchemy.orm import Session
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','')  #or f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/stockDashboard_db"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','')  or f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/stockDashboard_db"
 
 # Remove tracking modifications
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
