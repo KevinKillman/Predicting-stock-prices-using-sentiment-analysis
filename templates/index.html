@@ -10,26 +10,28 @@
 </head>
 <body >
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="btn btn-dark navbar-nav" style="color:green; background-color: white; padding-left: 5px;"  onclick='redirectHOME()'>Dashboard</button>
         <div id="stockInputForm">
             <label for="ticker">Stock Ticker Symbol</label>
             <input name="ticker" id="tickerInput" type="text" default="Ticker" value="AAPL">
             <label for="period">Period of Data: </label>
         </div>
 
-        <button class="btn btn-dark" onclick="stockButtonOn()">
+        <button class="btn btn-dark" style="color:green; background-color: white; padding-left: 5px; margin-left: 5px;" onclick="stockButtonOn()">
             Build
         </button>
 
- 
-        </div>
-      </nav>
+        <button class="btn btn-dark navbar-nav ml-auto" style="color:green; background-color: white; padding-left: 5px;" onclick='redirectML()'>Machine Learning</button>
+    </nav>
     <div class="container chart-container">
         <div class="row">
             <div class="col-md-9">
                 
                 <canvas id="myChart" name="chartTest"> 
                 </canvas>
-
+                <div class="container">
+                    <button onclick="resetChart()">Reset Chart</button>
+                </div>
                 <div class="radioIntervalChar d-flex justify-content-center">
                 </div>
             </div>
@@ -78,6 +80,7 @@
     <!-- Application Script -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/second_app.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/paging.js') }}"></script>
 
 
     <!-- Charts JS Script -->

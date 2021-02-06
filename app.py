@@ -9,18 +9,13 @@ from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 
-<<<<<<< Updated upstream
- # from config import sql_PASS, sql_USER, sql_HOST
-=======
+#from config import sql_PASS, sql_USER, sql_HOST
 
-from config import sql_PASS, sql_USER, sql_HOST
-
->>>>>>> Stashed changes
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','')  or #f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/detlgil9o37p0"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','')  or f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/stockDashboard_db"
 
 # Remove tracking modifications
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -41,9 +36,14 @@ def queryAPIstartEnd(ticker, s='1986-03-13', e='2020-12-14'):
 
     return yf.Ticker(ticker).history(start=s, end=e).reset_index(inplace=True).to_json(orient='records', date_format='iso')
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/machine_learning')
+def machine_learning():
+    return render_template('machine_learning.html')
 
 @app.route('/ticker=<string:ticker>')             
 def tickerRoute(ticker):
@@ -71,19 +71,33 @@ def infoRoute(ticker):
         
 @app.route('/buildActive')
 def buildActive():
-    activeStock_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
+    try:
+        activeStock_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
+    except ValueError:
+        temp = pd.read_html('https://finance.yahoo.com/trending-tickers')[0]
+        temp = temp.iloc[range(0,5), range(0,6)]
+        return temp.to_json(orient='records')
     top5_df = activeStock_df.iloc[range(0,5), range(0,6)]
     
     return top5_df.to_json(orient='records', date_format='iso')
 
 @app.route('/piechart=<string:tickerString>')
 def pieChart(tickerString):
+    print('pie')
     volumeDict = {
         'labels': [],
         'volumes': []
     }
     for ticker in tickerString.split(','):
-        for result in engine.execute(f'SELECT AVG("Volume") FROM "{ticker}"'):
+        times_tried=0
+        received=False
+        try:
+            query = engine.execute(f'SELECT AVG("Volume") FROM "{ticker}"')
+            received=True
+        except:
+            time.sleep(5)
+            times_tried+=1
+        for result in query:
             volumeDict['labels'].append(ticker)
             try:
                 volumeDict['volumes'].append(float(result[0]))
@@ -93,7 +107,11 @@ def pieChart(tickerString):
     
 @app.route('/buildsql')
 def buildSql():
-    top5_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
+    print('buildSQL')
+    try:
+        top5_df = pd.read_html('https://finance.yahoo.com/most-active')[0]
+    except ValueError:
+        top5_df = pd.read_html('https://finance.yahoo.com/trending-tickers')[0]
     search = ''
     searchList = []
     count = 0
