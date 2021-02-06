@@ -9,7 +9,13 @@ from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 
+<<<<<<< Updated upstream
  # from config import sql_PASS, sql_USER, sql_HOST
+=======
+
+from config import sql_PASS, sql_USER, sql_HOST
+
+>>>>>>> Stashed changes
 
 app = Flask(__name__)
 CORS(app)

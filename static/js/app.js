@@ -34,6 +34,7 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
     var xTime = dataset.map(element => element.Date)
     //Charts.js Line Chart
     //Chart is window resize responsive. Uses parent div to resize. Canvas tag must always be inside a container.
+<<<<<<< Updated upstream
     var myLineChart = new Chart(ctx, {
         type: 'line',
         data: { 
@@ -48,6 +49,40 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
                 borderColor: 'green',
                 borderWidth: 1,
                 lineTension:0
+=======
+    xData = yOpen.map((value, index) => {
+        return {x: xTime[index], y:value}
+    })
+    
+    var myLineChart
+    if (globalPeriod === "1d"){
+
+        myLineChart = new Chart(ctx, {
+            type: 'candlestick',
+            data: { 
+                // labels: ['xTime'], //X Axis
+                //Each line is passed as an object in an array
+                datasets: candlestickData(dataset)
+            },
+            // options: chartOptions() //Options logic
+        });
+    }else{    
+        myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: { 
+                labels: xTime, //X Axis
+                //Each line is passed as an object in an array
+                datasets: [{
+                    label: `${ticker} Price`,
+                    data: xData,
+                    fill: false,
+                    pointRadius: .9,
+                    pointHoverRadius: 3,
+                    borderColor: 'green',
+                    borderWidth: 1,
+                    lineTension:0
+                }]
+>>>>>>> Stashed changes
             },
         {
             label: `${ticker} Close Price`,
@@ -65,6 +100,36 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
     });
     return myLineChart; //returns chart object to global variable 
 };
+
+function candlestickData(dataset){
+    let x;
+    if(dataset[0].Date){
+        x = "Date"
+    }
+    if (dataset[0].Datetime){
+        x = "Datetime"
+    };
+    // console.log(dataset)
+    console.log(dataset.map(data => data[x]))
+    return [{
+		t: dataset.map(data => data[x]),
+		o: dataset.map(data => data.Open),
+		h: dataset.map(data => data.High),
+		l: dataset.map(data => data.Low),
+		c: dataset.map(data => data.Close)
+	}];
+}
+
+function gibDate(element){
+    if(element.Date){
+        console.log(element, 'Date')
+        return (element.Date)
+    }
+    if (element.Datetime){
+        console.log(element)
+        return (element.Datetime, "Datetime")
+    };
+}
 
 
 
