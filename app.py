@@ -10,7 +10,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from test import VWAP_data_requests
 
-#from config import sql_PASS, sql_USER, sql_HOST
+from config import sql_PASS, sql_USER, sql_HOST
 
 
 app = Flask(__name__)
