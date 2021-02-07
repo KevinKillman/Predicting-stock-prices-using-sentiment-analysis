@@ -8,6 +8,7 @@ import time
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
+from test import VWAP_data_requests
 
 #from config import sql_PASS, sql_USER, sql_HOST
 
@@ -44,6 +45,10 @@ def index():
 @app.route('/machine_learning')
 def machine_learning():
     return render_template('machine_learning.html')
+
+@app.route('/test')
+def testingSpace():
+    return render_template('test_canvas.html')
 
 @app.route('/ticker=<string:ticker>')             
 def tickerRoute(ticker):
@@ -129,6 +134,18 @@ def buildSql():
     for (ticker, df) in stockDict.items():
         df.to_sql(ticker, engine, if_exists='replace')
     return jsonify('Hello World')
-        
+
+@app.route('/VWAP/ticker=<string:ticker>')
+@app.route('/VWAP/ticker=<string:ticker>/interval=<string:interval>')
+def getVWAP(ticker, interval='1min'):
+    # allowed intervals = [1min, 5min, 15min, 30min, 60min]
+    if interval in ['1min', '5min', '15min', '30min', '60min']:
+        return VWAP_data_requests(ticker, interval)
+    else:
+        return {'ERROR':'ALLOWED INTERVALS ONLY [1min, 5min, 15min, 30min, 60min]'}
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)   
