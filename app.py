@@ -8,7 +8,7 @@ import time
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from test import VWAP_data_requests
+from vywapFunction import VWAP_data_requests
 
 from config import sql_PASS, sql_USER, sql_HOST
 
@@ -135,7 +135,6 @@ def buildSql():
         df.to_sql(ticker, engine, if_exists='replace')
     return jsonify('Hello World')
 
-@app.route('/VWAP/ticker=<string:ticker>')
 @app.route('/VWAP/ticker=<string:ticker>/interval=<string:interval>')
 def getVWAP(ticker, interval='1min'):
     # allowed intervals = [1min, 5min, 15min, 30min, 60min]

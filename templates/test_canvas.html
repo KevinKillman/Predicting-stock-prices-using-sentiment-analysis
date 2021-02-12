@@ -4,7 +4,78 @@
 <meta charset="UTF-8">
 <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/canvas_js.js') }}"></script>
+<script type="text/javascript">
+window.onload = function() {
+    var options ={}
+    var dataPoints1 = [], dataPoints2 = []
+    var sliderRange = []
+    var candleChart = new CanvasJS.StockChart("chartContainer", {
+        theme: "light1",
+        
+        // exportEnabled: true,
+        title:{
+            text:"Ethereum Price"
+        },
+        
+        charts: [{
+            zoomEnabled: true, 
+            zoomType: "x",
+            axisY: {
+                prefix: "$"
+            },
+            axisX:{
+                scaleBreaks: {
+                    autoCalculate: true //change it to false
+                }
+            },
+            
+            
+            data: [{
+                type: "candlestick",
+                yValueFormatString: "$#,###.##",
+                dataPoints : dataPoints1
+            }]
+        }],
+        rangeSelector: {
+            enabled: true, //Change it to true to enable Range Selector
+        },
+        navigator: {
+            animationEnabled: true,
+            data: [{
+              color: "#6D78AD",
+              dataPoints: dataPoints2
+            }],
+            slider: {
+              minimum: new Date(2021, 02, 05),
+              maximum: new Date(2021, 02, 05)
+            },
+            // axisY: {
+            //     valueFormatString: "#,##.#"
+            // },
+            dynamicUpdate:false
+        }
+    })
+  
+    $.getJSON('./VWAP/ticker=AMC/interval=1min', result => {
+        // result.forEach(row => {
+            // x = row['Date'].split('T')
+            // y = x[1].split('.')
+            // time = y[0]
+            // console.log(time)
+            // dataPoints1.push({x: time, y: [parseFloat(row['Open']),parseFloat(row['High']),parseFloat(row['Low']),parseFloat(row['Close'])]})
+            // dataPoints2.push({x:row['Date'], y: row['Close']})
+            // candleChart.render();
+            // console.log(row)
+
+
+            for(var i = 0; i < result.length; i++){
+                dataPoints1.push({x: new Date(result[i]['Date']), y: [Number(result[i]['Open']),Number(result[i]['High']),Number(result[i]['Low']),Number(result[i]['Close'])]});
+                dataPoints2.push({x: new Date(result[i]['Date']), y: Number(result[i]['Close'])});
+            }
+            candleChart.render();
+        })
+}
+</script>
 </head>
 <body>
 <div id="chartContainer" style="height: 370px; width: 100%;"></div>

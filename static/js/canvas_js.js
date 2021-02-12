@@ -1,21 +1,22 @@
 window.onload = function() {
+
+
     var options ={}
     var dataPoints1 = [], dataPoints2 = []
     var sliderRange = []
     var candleChart = new CanvasJS.StockChart("chartContainer", {
         theme: "light2",
-        exportEnabled: true,
+        
+        // exportEnabled: true,
         title:{
             text:"Ethereum Price"
         },
+        
         charts: [{
             axisY: {
                 prefix: "$"
             },
-            axisX: {
-                interval: 15,
-                intervalType: 'minute'
-            },
+            
             data: [{
                 type: "candlestick",
                 yValueFormatString: "$#,###.00",
@@ -31,21 +32,29 @@ window.onload = function() {
               minimum: new Date(2021, 02, 04),
               maximum: new Date(2021, 02, 05)
             }
-          }
+        }
     })
-    d3.json('./VWAP/ticker=AMC/interval=60min', result => {
-        result.forEach(row => {
-            x = row['Date'].split('T')
-            y = x[1].split('.')
-            time = y[0]
-            console.log(time)
-            dataPoints1.push({x: time, y: [parseFloat(row['Open']),parseFloat(row['High']),parseFloat(row['Low']),parseFloat(row['Close'])]})
-            dataPoints2.push({x:row['Date'], y: row['Close']})
+  
+    $.getJSON('./VWAP/ticker=AMC/interval=1min', result => {
+        // result.forEach(row => {
+            // x = row['Date'].split('T')
+            // y = x[1].split('.')
+            // time = y[0]
+            // console.log(time)
+            // dataPoints1.push({x: time, y: [parseFloat(row['Open']),parseFloat(row['High']),parseFloat(row['Low']),parseFloat(row['Close'])]})
+            // dataPoints2.push({x:row['Date'], y: row['Close']})
+            // candleChart.render();
+            // console.log(row)
+
+
+            for(var i = 0; i < result.length; i++){
+                dataPoints1.push({x: new Date(result[i]['Date']), y: [Number(result[i]['Open']),Number(result[i]['High']),Number(result[i]['Low']),Number(result[i]['Close'])]});
+                dataPoints2.push({x: new Date(result[i]['Date']), y: Number(result[i]['Close'])});
+            }
+            candleChart.render();
         })
-        candleChart.render()
-        // console.log(candleChart)
-    })
 }
+        // console.log(candleChart)
 
 
 
