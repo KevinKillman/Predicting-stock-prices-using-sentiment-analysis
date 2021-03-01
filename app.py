@@ -92,12 +92,14 @@ def pieChart(tickerString):
     for ticker in tickerString.split(','):
         times_tried=0
         received=False
-        try:
-            query = engine.execute(f'SELECT AVG("Volume") FROM "{ticker}"')
-            received=True
-        except:
-            time.sleep(5)
-            times_tried+=1
+        while received==False:
+            try:
+                query = engine.execute(f'SELECT AVG("Volume") FROM "{ticker}"')
+                received=True
+            except:
+                time.sleep(5)
+                times_tried+=1
+        
         for result in query:
             volumeDict['labels'].append(ticker)
             try:
