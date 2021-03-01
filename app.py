@@ -131,14 +131,14 @@ def buildSql():
         df.to_sql(ticker, engine, if_exists='replace')
     return jsonify('Hello World')
 
-@app.route('/VWAP/ticker=<string:ticker>')
-@app.route('/VWAP/ticker=<string:ticker>/interval=<string:interval>')
-def getVWAP(ticker, interval='1min'):
-    # allowed intervals = [1min, 5min, 15min, 30min, 60min]
-    if interval in ['1min', '5min', '15min', '30min', '60min']:
-        return VWAP_data_requests(ticker, interval)
-    else:
-        return {'ERROR':'ALLOWED INTERVALS ONLY [1min, 5min, 15min, 30min, 60min]'}
+# @app.route('/VWAP/ticker=<string:ticker>')
+# @app.route('/VWAP/ticker=<string:ticker>/interval=<string:interval>')
+# def getVWAP(ticker, interval='1min'):
+#     # allowed intervals = [1min, 5min, 15min, 30min, 60min]
+#     if interval in ['1min', '5min', '15min', '30min', '60min']:
+#         return VWAP_data_requests(ticker, interval)
+#     else:
+#         return {'ERROR':'ALLOWED INTERVALS ONLY [1min, 5min, 15min, 30min, 60min]'}
 
 
 
