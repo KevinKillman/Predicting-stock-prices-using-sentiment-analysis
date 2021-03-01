@@ -127,8 +127,11 @@ def buildSql():
     for name in tickers.tickers:
         stockSingle_df = name.history().iloc[:,range(0,5)]
         time.sleep(0.1)
-        symbol = name.info['symbol']
-        stockDict.update({symbol:stockSingle_df})
+        try:
+            symbol = name.info['symbol']
+            stockDict.update({symbol:stockSingle_df})
+        except ValueError:
+            next
     for (ticker, df) in stockDict.items():
         df.to_sql(ticker, engine, if_exists='replace')
     return jsonify('Hello World')
