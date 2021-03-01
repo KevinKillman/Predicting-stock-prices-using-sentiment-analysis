@@ -86,27 +86,28 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
             },
             options: chartOptions() //Options logic
         });
-    }else{    
-        myLineChart = new Chart(ctx, {
-            type: 'line',
-            data: { 
-                labels: xTime, //X Axis
-                //Each line is passed as an object in an array
-                datasets: [{
-                    label: `${ticker} Price`,
-                    data: xData,
-                    fill: false,
-                    pointRadius: .9,
-                    pointHoverRadius: 3,
-                    borderColor: 'green',
-                    borderWidth: 1,
-                    lineTension:0
-                }]
-            },
-            options: chartOptions(), //Options logic
-            
-        });
     }
+    //else{    
+    //     myLineChart = new Chart(ctx, {
+    //         type: 'line',
+    //         data: { 
+    //             labels: xTime, //X Axis
+    //             //Each line is passed as an object in an array
+    //             datasets: [{
+    //                 label: `${ticker} Price`,
+    //                 data: xData,
+    //                 fill: false,
+    //                 pointRadius: .9,
+    //                 pointHoverRadius: 3,
+    //                 borderColor: 'green',
+    //                 borderWidth: 1,
+    //                 lineTension:0
+    //             }]
+    //         },
+    //         options: chartOptions(), //Options logic
+            
+    //     });
+    // }
     return myLineChart; //returns chart object to global variable 
 };
 
