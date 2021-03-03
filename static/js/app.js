@@ -37,30 +37,19 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
     
     var xTime = dataset.map(element => {
         if(element.Date){
-<<<<<<< Updated upstream
             // console.log(element)
             return (element.Date)
         }
         if (element.Datetime){
             // console.log(element)
-=======
-            console.log(element)
-            return (element.Date)
-        }
-        if (element.Datetime){
-            console.log(element)
->>>>>>> Stashed changes
             return (element.Datetime)
     }});
     //Charts.js Line Chart
     //Chart is window resize responsive. Uses parent div to resize. Canvas tag must always be inside a container.
-<<<<<<< Updated upstream
     xData = yOpen.map((value, index) => {
         return {x: xTime[index], y:value}
     })
     
-=======
->>>>>>> Stashed changes
     var myLineChart
     if (globalPeriod === "1d"){
         myLineChart = new Chart(ctx, {
@@ -88,32 +77,14 @@ function init_chart(ticker=chosenTicker, dataset, ctx) {
                 labels: xTime, //X Axis
                 //Each line is passed as an object in an array
                 datasets: [{
-<<<<<<< Updated upstream
                     label: `${ticker} Price`,
                     data: xData,
-=======
-                    label: `${ticker} Open Price`,
-                    data: yOpen,
->>>>>>> Stashed changes
                     fill: false,
                     pointRadius: .9,
                     pointHoverRadius: 3,
                     borderColor: 'green',
                     borderWidth: 1,
                     lineTension:0
-<<<<<<< Updated upstream
-=======
-                },
-                {
-                    label: `${ticker} Close Price`,
-                    data: yClose,
-                    fill: false,
-                    pointRadius: .5,
-                    pointHoverRadius: 3,
-                    borderColor: 'red',
-                    borderWidth: 1,
-                    lineTension:0
->>>>>>> Stashed changes
                 }]
             },
             options: chartOptions(), //Options logic
@@ -223,7 +194,6 @@ function cleanData(result) {
 
 function newTickerChartUpdate(chart,  newData, ticker, options) {
     let newXAxis;
-<<<<<<< Updated upstream
     if (chart.data.datasets.length>1){
         
         chart.destroy()
@@ -250,39 +220,6 @@ function newTickerChartUpdate(chart,  newData, ticker, options) {
     //         chart.data.datasets.pop()
     //     }
     // }
-=======
-    if (newData[0].Date){
-        newXAxis = newData.map(element => moment(element.Date))
-    }
-    if (newData[0].Datetime){
-        newXAxis = newData.map(element => moment(element.Datetime))
-    }
-
-    let count =chart.data.labels.length;
-    console.log(chart.data)
-    // for(let i=0; i<count; i++){
-    //     chart.data.labels.pop()
-    // }
-    chart.data.labels = newXAxis;   //X Axis
-    chart.data.datasets.forEach((dataset) => {
-        
-        if (dataset.label.split(' ')[1] ==='Open'){
-            // dataset.data.pop();
-            dataset.data = newData.map(element => element.Open)
-            dataset.label = `${ticker} Open Price`        //Line Label
-        }else if (dataset.label.split(' ')[1] ==='Close'){
-            dataset.data.pop();
-            dataset.label = `${ticker} Close Price`
-            dataset.data = newData.map(element => element.Close)
-
-
-        } 
-        
-    });
-    chart.options=options
-    chart.update();
-
->>>>>>> Stashed changes
     return chart;
 };
 
@@ -419,11 +356,8 @@ function chartOptions(interval=globalInterval){
                             label += ': ';
                         }
                         label += `$${Math.round(tooltipItem.yLabel*100)/100}`;  //Multiply and Divide by 100 to get 2 decimal places
-<<<<<<< Updated upstream
                         // console.log(label)
-=======
-                        console.log(label)
->>>>>>> Stashed changes
+
                         return label;
                     },
                     
