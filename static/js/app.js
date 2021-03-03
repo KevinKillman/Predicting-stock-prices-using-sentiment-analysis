@@ -474,6 +474,7 @@ function changeInterval(chart=globalChart, interval=globalInterval, period=globa
     return chart;
 }
 
+// need to repush
 function checkIntervalLogic(){
     if (globalPeriod === "1d" | globalPeriod === "5d"){
         allowedIntervalValues = ['1m','2m','5m','15m','30m','60m','90m','1h']
