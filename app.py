@@ -12,11 +12,19 @@ from sqlalchemy.orm import Session
 
 #from config import sql_PASS, sql_USER, sql_HOST
 
+<<<<<<< Updated upstream
+=======
+from config import sql_PASS, sql_USER, sql_HOST
+>>>>>>> Stashed changes
 
 app = Flask(__name__)
 CORS(app)
 
+<<<<<<< Updated upstream
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','') #or f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/stockDashboard_db"
+=======
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','')  or f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/detlgil9o37p0"
+>>>>>>> Stashed changes
 
 # Remove tracking modifications
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
