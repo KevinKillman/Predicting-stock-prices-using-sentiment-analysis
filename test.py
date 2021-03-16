@@ -14,7 +14,7 @@ def VWAP_data_requests(ticker, interval):
     json = requests.get(f'https://www.alphavantage.co/query?function=VWAP&symbol={ticker}&interval={interval}&outputsize=full&apikey={key}').json()
     stock_df = pd.DataFrame(json['Technical Analysis: VWAP'])
     stock_df = stock_df.transpose()
-    json2 = requests.get(f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AMC&interval=1min&outputsize=full&apikey={key}').json()
+    json2 = requests.get(f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={ticker}&interval={interval}&outputsize=full&apikey={key}').json()
     time_df = pd.DataFrame(json2['Time Series (1min)']).transpose()
     temp_list = []
     for x in stock_df['VWAP']:

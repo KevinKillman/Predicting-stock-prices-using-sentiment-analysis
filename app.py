@@ -8,15 +8,15 @@ import time
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-# from test import VWAP_data_requests
+from test import VWAP_data_requests
 
-#from config import sql_PASS, sql_USER, sql_HOST
+from config import sql_PASS, sql_USER, sql_HOST
 
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','') #or f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/stockDashboard_db"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','') or f"postgres://{sql_USER}:{sql_PASS}@{sql_HOST}:5432/stockDashboard_db"
 
 # Remove tracking modifications
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -45,6 +45,10 @@ def index():
 @app.route('/machine_learning')
 def machine_learning():
     return render_template('machine_learning.html')
+
+@app.route('/testing')
+def testing():
+    return render_template('testing.html')
 
 @app.route('/ticker=<string:ticker>')             
 def tickerRoute(ticker):
@@ -136,7 +140,14 @@ def buildSql():
         df.to_sql(ticker, engine, if_exists='replace')
     return jsonify('Hello World')
 
-# @app.route('/VWAP/ticker=<string:ticker>')
+@app.route('/VWAP/ticker=<string:ticker>')
+def getVWAPTicker(ticker, interval='1min'):
+    # allowed intervals = [1min, 5min, 15min, 30min, 60min]
+    if interval in ['1min', '5min', '15min', '30min', '60min']:
+        return VWAP_data_requests(ticker, interval)
+    else:
+        return {'ERROR':'ALLOWED INTERVALS ONLY [1min, 5min, 15min, 30min, 60min]'}
+
 # @app.route('/VWAP/ticker=<string:ticker>/interval=<string:interval>')
 # def getVWAP(ticker, interval='1min'):
 #     # allowed intervals = [1min, 5min, 15min, 30min, 60min]

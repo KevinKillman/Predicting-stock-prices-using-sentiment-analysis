@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/assets.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- DevExtreme themes -->
+    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/20.2.5/css/dx.common.css">
+    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/20.2.5/css/dx.dark.css">
+    
+    <!-- DevExtreme library -->
+    <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/20.2.5/js/dx.all.js"></script>
+    <script src="../static/js/jquery.js"></script>
+</head>
+<body class="dx-viewport">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="btn btn-dark navbar-nav" style="color:green; background-color: white; padding-left: 5px;"  onclick='redirectHOME()'>Dashboard</button>
+        <button class="btn btn-dark navbar-nav ml-auto" style="color:green; background-color: white; padding-left: 5px;" onclick='redirectML()'>Machine Learning</button>
+    </nav>
+
+</body>
+</html>
