@@ -42,6 +42,10 @@ def queryAPIstartEnd(ticker, s='1986-03-13', e='2020-12-14'):
 def index():
     return render_template('index.html')
 
+@app.route('/render_chart')
+def chart():
+    return render_template('chart.html')
+
 @app.route('/machine_learning')
 def machine_learning():
     return render_template('machine_learning.html')
@@ -141,7 +145,7 @@ def buildSql():
     return jsonify('Hello World')
 
 @app.route('/VWAP/ticker=<string:ticker>')
-def getVWAPTicker(ticker, interval='1min'):
+def getVWAPTicker(ticker, interval='60min'):
     # allowed intervals = [1min, 5min, 15min, 30min, 60min]
     if interval in ['1min', '5min', '15min', '30min', '60min']:
         return VWAP_data_requests(ticker, interval)
