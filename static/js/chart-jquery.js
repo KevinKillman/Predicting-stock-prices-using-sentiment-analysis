@@ -1,5 +1,39 @@
 $(function () {
     let chosenTicker = 'AMC'
+    const chartDrawer = $("#hash").append('<div id="mainChartWrapper">').dxDrawer({
+        // ...
+        template: function(e) {
+            const $list = $("<div/>").dxList({
+                items: [
+                    { id: 1, text: "Chart", icon: "chart", path: "/render_chart" },
+                ],
+                height: 100,
+                selectionMode: "single",
+                onSelectionChanged: function(e) {
+                    
+                    drawer.hide();
+                },
+                position: 'bottom'
+            });
+            return $list;
+        },
+        // openedStateMode: "overlap"
+    }).dxDrawer("instance");
+    $("#chartToolbar").dxToolbar({
+        items: [{
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "menu",
+                onClick: function() {
+                    chartDrawer.toggle();
+                }
+            }
+        }]
+    });
+    $('#mainChartWrapper').addClass("mx-auto bg-white rounded-xl shadow-md flex items-center ").append("<div id='mainChart'>");
+    
+
     $.getJSON(`./ticker=${chosenTicker}/period=1d/interval=5m`, (data, status) => {
         // console.log(status)
         // console.log(data)
@@ -15,9 +49,9 @@ $(function () {
 
         })
         let temp = data.splice(0, 99)
-        console.log(temp)
-        $("#hash").dxChart({
-            title: "Stock Price",
+        let p = temp[0]
+        $("#mainChart").dxChart({
+            title: `${moment(p.Date).format('MMM-DD')}`,
             dataSource: temp,
             argumentAxis: {
                 argumentType: 'datetime',
@@ -39,7 +73,7 @@ $(function () {
             },
             series: [
                 {
-                    name: "DELL",
+                    name: `${chosenTicker}`,
                     openValueField: "Open",
                     highValueField: "High",
                     lowValueField: "Low",
@@ -64,7 +98,10 @@ $(function () {
             argumentAxis: {
                 workdaysOnly: true,
                 label: {
-                    format: "shortDate"
+                    format: {hour:'numeric'}
+                },
+                grid: {
+                    visible: true
                 }
             },
             "export": {
@@ -83,13 +120,5 @@ $(function () {
                 }
             }
         });
-        $('#resizable').dxResizable({
-            // ...
-            handles: "bottom right",
-            onResizeEnd: function (e) {
-                $("#hash").dxChart("render");
-            }
-            
-        }).attr('style', 'border: solid;');;
     })
 })

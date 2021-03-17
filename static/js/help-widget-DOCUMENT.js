@@ -1,0 +1,3 @@
+    // <!-- Document360 Knowledge Base Assistant Start --> 
+(function (w,d,s,o,f,js,fjs) { w['JS-Widget']=o;w[o] = w[o] || function () { (w[o].q = w[o].q || []).push(arguments) }; js = d.createElement(s), fjs = d.getElementsByTagName(s)[0]; js.id = o; js.src = f; js.async = 1; fjs.parentNode.insertBefore(js, fjs); }(window, document, 'script', 'mw', 'https://cdn.document360.io/static/js/widget.js')); mw('init', { apiKey: 'OBBt3Wo9S/fCC3ioJTustdGAXKhOR0lnxqCjI/dD32Wy30lPdXz1WHg3bsWrwq4TjgdAdrQOLEVKolYNR0NY78pv5ioKh/LUoJ2Q0TmJbhRFlgm3U6/bfZa1VfI71ZLcRvA2gzsy0vwAoTfkrCeOHA==' }); 
+    // <!-- Document360 Knowledge Base Assistant End -->

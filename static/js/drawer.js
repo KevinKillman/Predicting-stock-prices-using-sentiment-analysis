@@ -4,7 +4,7 @@ $(function() {
         template: function(e) {
             const $list = $("<div/>").dxList({
                 items: [
-                    { id: 1, text: "Chart", icon: "message", path: "/render_chart" },
+                    { id: 1, text: "Chart", icon: "chart", path: "/render_chart" },
                 ],
                 width: 200,
                 selectionMode: "single",
@@ -25,11 +25,11 @@ $(function() {
                 icon: "menu",
                 onClick: function() {
                     drawer.toggle();
-                    // console.log(e)
                 }
             }
         }]
     });
+
     
 
 });
