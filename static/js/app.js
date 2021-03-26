@@ -2,7 +2,7 @@
 
 
 // user defined in stockButtonOn(), init_chart(), and handleRadio()
-var chosenTicker = 'AAPL'
+var chosenTicker = 'AMC'
 var globalChart; //Chart object; globalChart.data.datasets etc..
 var globalInterval='1m'; //Interval that data can be viewed at. 1min incremented to 1mo (month). Limited by chosen period.
 var globalPeriod='1d'; //Data reporting period. Starting from today moving back, 1d (day) incremented to 10y (years)

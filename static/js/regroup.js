@@ -1,44 +1,53 @@
-$(function () {
-    let chosenTicker = 'AMC'
-    const wrapper = $("#hash").prepend('<div id="mainChartWrapper">')
-    const chartDrawer = wrapper.dxDrawer({
-        height: 400,
+$(function() {
+    const drawer = $("#drawer").dxDrawer({
+        openedStateMode: 'overlap',
         revealMode: 'expand',
+        position: 'top',
+        // height:100,
         closeOnOutsideClick: true,
-        position: 'bottom',
         template: function(e) {
             const $list = $("<div/>").dxList({
                 items: [
-                    { id: 1, text: "Chart", icon: "chart", path: "/render_chart" },
+                    { id: 1, text: "Home", path:"/"},
+                    { id: 2, text: "Chart", path:"/testing"},
+
                 ],
-                height: 100,
+                height: 'auto',
+                
                 selectionMode: "single",
                 onSelectionChanged: function(e) {
-                    
                     drawer.hide();
-                }
+                    console.log(e)
+                    let i = e.addedItems
+                    window.location.href = i[0].path
+                },
+                hoverStateEnabled: true,
+                focusStateEnabled: true,
+                activeStateEnabled: false,
+                elementAttr: { class: "dx-theme-accent-as-background-color" }
             });
-            console.log($list)
+            // console.log($list)
             return $list;
         },
         // openedStateMode: "overlap"
     }).dxDrawer("instance");
-    $(wrapper).append('<div id="chartToolbar">')
-    $("#chartToolbar").dxToolbar({
+    $("#toolbar").dxToolbar({
         items: [{
             widget: "dxButton",
-            location: "bottom",
-            
+            location: "before",
             options: {
                 icon: "menu",
                 onClick: function() {
-                    chartDrawer.toggle();
+                    drawer.toggle();
                 }
             }
         }]
     });
-    $('#mainChartWrapper').addClass("mx-auto bg-white rounded-xl shadow-md flex items-center ").append("<div id='mainChart'>");
-    
+
+    $("#drawerDrop").addClass('w-full bg-black p-2 m-auto').append("<button>test</button>");
+
+
+    let chosenTicker = "AMC"
 
     $.getJSON(`./ticker=${chosenTicker}/period=1d/interval=5m`, (data, status) => {
         // console.log(status)
@@ -118,5 +127,28 @@ $(function () {
                 }
             }
         });
+
+        // $("#viewWrapper").addClass('overflow-auto overflow-x-auto rounded-lg p-2 m-2 shadow-inner')
+
+        
     })
-})
+    $("#opened-state-mode").dxRadioGroup({
+        items: ["push", "shrink", "overlap"],
+        layout: "horizontal",
+        value: "shrink",
+        onValueChanged: function(e) {
+            drawer.option("openedStateMode", e.value);
+            $("#reveal-mode-option").css("visibility", e.value !== "push" ? "visible" : "hidden");
+        }
+    });
+
+
+
+
+});
+
+function articleRedirect() {
+    FreshworksWidget('open', 'article', {
+        id:69000298679
+    })
+}

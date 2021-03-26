@@ -30,6 +30,8 @@ $(function() {
         }]
     });
 
+    $(drawer).show()
+
     
 
 });

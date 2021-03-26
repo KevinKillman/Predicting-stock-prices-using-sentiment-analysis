@@ -9,3 +9,8 @@ function redirectHOME(){
         window.location.href = '/'
     }
 }
+
+function redirectTESTING() {
+    window.location.href='/testing'
+}
+

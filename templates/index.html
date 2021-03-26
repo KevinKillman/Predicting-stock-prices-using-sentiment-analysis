@@ -6,7 +6,13 @@
     <title>Stock Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/assets.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script>
+        window.fwSettings={
+        'widget_id':69000001224
+        };
+        !function(){if("function"!=typeof window.FreshworksWidget){var n=function(){n.q.push(arguments)};n.q=[],window.FreshworksWidget=n}}() 
+    </script>
+    <script type='text/javascript' src='https://widget.freshworks.com/widgets/69000001224.js' async defer></script>
 
 </head>
 <body >
@@ -14,15 +20,19 @@
         <button class="btn btn-dark navbar-nav" style="color:green; background-color: white; padding-left: 5px;"  onclick='redirectHOME()'>Dashboard</button>
         <div id="stockInputForm">
             <label for="ticker">Stock Ticker Symbol</label>
-            <input name="ticker" id="tickerInput" type="text" default="Ticker" value="AAPL">
+            <input name="ticker" id="tickerInput" type="text" default="Ticker" value="AMC">
             <label for="period">Period of Data: </label>
         </div>
 
         <button class="btn btn-dark" style="color:green; background-color: white; padding-left: 5px; margin-left: 5px;" onclick="stockButtonOn()">
             Build
         </button>
-
-        <button class="btn btn-dark navbar-nav ml-auto" style="color:green; background-color: white; padding-left: 5px;" onclick='redirectML()'>Machine Learning</button>
+        <button class="btn btn-dark" style="color:green; background-color: white; padding-left: 5px; margin-left: 5px;" onclick="redirectTESTING()">
+            Testing Area
+        </button>
+        <button class="btn btn-dark navbar-nav ml-auto" style="color:green; background-color: white; padding-left: 5px;" onclick='redirectML()'>
+            Machine Learning
+        </button>
     </nav>
     <div class="container chart-container">
         <div class="row">
