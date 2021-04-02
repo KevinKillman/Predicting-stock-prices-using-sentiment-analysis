@@ -148,7 +148,14 @@ $(function() {
 });
 
 function articleRedirect() {
-    FreshworksWidget('open', 'article', {
-        id:69000298679
+
+    $(function() {
+        FreshworksWidget('open', 'article', {
+            id:69000306818
+        })
+
     })
+    
+
+    
 }
